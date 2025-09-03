@@ -68,7 +68,6 @@ public final class Main
 	private static void launchMainWindow ()
 	{
 		final MainWindow mainWindow = new MainWindow();
-		mainWindow.pack();
 		mainWindow.setVisible(true);
 		LOGGER.info("Application started.");
 	}
