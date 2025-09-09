@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FileFlowConfiguration version="1.0">
+
+    <!-- Metadaten zur Nachvollziehbarkeit -->
+    <Metadata>
+        <Name>Standard Reinigung</Name>
+        <Author>Lasse</Author>
+        <Created>2025-09-09</Created>
+        <Description>
+            Diese Konfiguration entfernt temporäre Dateien, leert den Papierkorb
+            und organisiert Desktop-Ordner.
+        </Description>
+    </Metadata>
+
+    <!-- Liste von Prozeduren -->
+    <Procedures>
+
+        <!-- Prozedur: temporäre Dateien löschen -->
+        <Procedure id="cleanup-temp" name="Temporäre Dateien löschen">
+            <Step order="1" action="delete">
+                <Source path="C:/Users/%USERNAME%/AppData/Local/Temp"/>
+            </Step>
+            <Step order="2" action="delete">
+                <Source path="C:/Windows/Temp"/>
+            </Step>
+        </Procedure>
+
+        <!-- Prozedur: Papierkorb leeren -->
+        <Procedure id="empty-bin" name="Papierkorb leeren">
+            <Step order="1" action="emptyRecycleBin"/>
+        </Procedure>
+
+        <!-- Prozedur: Desktop aufräumen -->
+        <Procedure id="organize-desktop" name="Desktop organisieren">
+
+            <Step order="1" action="move">
+                <Source>
+                    <Path>C:/Users/%USERNAME%/Desktop</Path>
+                    <Include pattern="*.txt"/>
+                    <Include pattern="*.log"/>
+                    <Exclude pattern="*.json"/>
+                </Source>
+                <Destination path="C:/Users/%USERNAME%/Desktop/Dokumente"/>
+            </Step>
+
+            <Step order="2" action="move">
+                <Source path="C:/Users/%USERNAME%/Desktop/*.jpg"/>
+                <Destination path="C:/Users/%USERNAME%/Desktop/Bilder"/>
+            </Step>
+
+        </Procedure>
+
+    </Procedures>
+</FileFlowConfiguration>
