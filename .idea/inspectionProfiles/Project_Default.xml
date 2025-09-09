@@ -120,7 +120,7 @@
     <inspection_tool class="ClassWithTooManyTransitiveDependents" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES">
       <option name="limit" value="35" />
     </inspection_tool>
-    <inspection_tool class="ClassWithoutLogger" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES">
+    <inspection_tool class="ClassWithoutLogger" enabled="false" level="WEAK WARNING" enabled_by_default="false" editorAttributes="INFO_ATTRIBUTES">
       <option name="loggerNamesString" value="java.util.logging.Logger,org.slf4j.Logger,org.apache.commons.logging.Log,org.apache.log4j.Logger,org.apache.logging.log4j.Logger,me.vault.game.utility.logging.ILogger,me.vault.game.utility.logging.Logger" />
       <option name="ignoreSuperLoggers" value="false" />
     </inspection_tool>
@@ -604,7 +604,7 @@
       <option name="SUGGEST_PRIVATE_FOR_INNERS" value="false" />
     </inspection_tool>
     <inspection_tool class="ZeroLengthArrayInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="unused" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES" checkParameterExcludingHierarchy="false">
+    <inspection_tool class="unused" enabled="true" level="INFORMATION" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES" checkParameterExcludingHierarchy="false">
       <option name="LOCAL_VARIABLE" value="true" />
       <option name="FIELD" value="true" />
       <option name="METHOD" value="true" />
