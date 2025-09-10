@@ -1,8 +1,8 @@
-package xml;
+package control.xml;
 
 
 import lombok.Getter;
-import model.XMLConfiguration;
+import model.xml.XMLConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -61,6 +61,8 @@ public final class XMLBuilder
 	 * Writes options elements into the provided XML document based on the given configuration.
 	 *
 	 * @param configuration the {@link XMLConfiguration} object containing information used to create the "Options" element
+	 *
+	 * @return an {@link Element} object representing the "Options" element.
 	 */
 	public Element buildOptions (final XMLConfiguration configuration)
 	{

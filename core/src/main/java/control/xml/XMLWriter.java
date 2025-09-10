@@ -1,10 +1,10 @@
-package xml;
+package control.xml;
 
 
 import exception.XMLWriterException;
 import lombok.Getter;
 import lombok.ToString;
-import model.XMLConfiguration;
+import model.xml.XMLConfiguration;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,7 +33,7 @@ public class XMLWriter
 
 
     /**
-     * Constructs an xml.XMLWriter instance using the path to an XML file.
+     * Constructs an control.xml.XMLWriter instance using the path to an XML file.
      *
      * @param filePath the path to the XML file to be written
      */
@@ -44,7 +44,7 @@ public class XMLWriter
 
 
     /**
-     * Constructs an xml.XMLWriter instance using the provided XML file.
+     * Constructs an control.xml.XMLWriter instance using the provided XML file.
      *
      * @param xmlFile the XML file to which data will be written
      */

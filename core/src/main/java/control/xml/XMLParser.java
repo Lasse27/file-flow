@@ -1,4 +1,4 @@
-package xml;
+package control.xml;
 
 
 public class XMLParser
