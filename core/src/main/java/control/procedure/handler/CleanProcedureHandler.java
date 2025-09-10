@@ -9,7 +9,7 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#CLEAN}.
  */
-public class CleanProcedureHandler implements ProcedureHandler
+public final class CleanProcedureHandler implements ProcedureHandler
 {
 
 	/**

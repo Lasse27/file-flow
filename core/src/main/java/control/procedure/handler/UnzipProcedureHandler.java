@@ -9,7 +9,7 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#UNZIP}.
  */
-public class UnzipProcedureHandler implements ProcedureHandler
+public final class UnzipProcedureHandler implements ProcedureHandler
 {
 
 	/**

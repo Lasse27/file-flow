@@ -9,26 +9,25 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#ZIP}.
  */
-public class ZipProcedureHandler implements ProcedureHandler
+public final class ZipProcedureHandler implements ProcedureHandler
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void validate (final Procedure procedure) throws ProcedureHandlerException
-	{
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void validate(final Procedure procedure) throws ProcedureHandlerException
+    {
 
-	}
+    }
 
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handle(final Procedure procedure) throws ProcedureHandlerException
+    {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void handle (final Procedure procedure) throws ProcedureHandlerException
-	{
-
-	}
+    }
 }

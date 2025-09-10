@@ -9,7 +9,7 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#DELETE}.
  */
-public class DeleteProcedureHandler implements ProcedureHandler
+public final class DeleteProcedureHandler implements ProcedureHandler
 {
 
 	/**

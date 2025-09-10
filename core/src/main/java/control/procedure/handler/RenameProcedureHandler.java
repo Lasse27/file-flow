@@ -9,7 +9,7 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#RENAME}.
  */
-public class RenameProcedureHandler implements ProcedureHandler
+public final class RenameProcedureHandler implements ProcedureHandler
 {
 
 	/**

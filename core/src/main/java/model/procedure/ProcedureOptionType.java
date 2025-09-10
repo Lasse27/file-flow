@@ -1,0 +1,24 @@
+package model.procedure;
+
+import lombok.Getter;
+
+@Getter
+public enum ProcedureOptionType
+{
+    TARGET("Target"),
+
+    SOURCE("Source"),
+
+    INCLUDE("Include"),
+
+    EXCLUDE("Exclude");
+
+
+    private final String identifier;
+
+
+    ProcedureOptionType(final String identifier)
+    {
+        this.identifier = identifier;
+    }
+}

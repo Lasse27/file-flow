@@ -9,7 +9,7 @@ import model.procedure.ProcedureType;
 /**
  * Implementation of {@link ProcedureHandler} that handles procedures of type {@link ProcedureType#COPY}.
  */
-public class CopyProcedureHandler implements ProcedureHandler
+public final class CopyProcedureHandler implements ProcedureHandler
 {
 
 	/**
