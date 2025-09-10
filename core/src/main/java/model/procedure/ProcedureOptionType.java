@@ -11,7 +11,9 @@ public enum ProcedureOptionType
 
     INCLUDE("Include"),
 
-    EXCLUDE("Exclude");
+    EXCLUDE("Exclude"),
+
+    RULE("Rule");
 
 
     private final String identifier;
