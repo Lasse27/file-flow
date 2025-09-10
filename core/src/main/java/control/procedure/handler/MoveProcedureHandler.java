@@ -14,6 +14,9 @@ public class MoveProcedureHandler implements ProcedureHandler
 	/**
 	 * {@inheritDoc}
 	 */
+	/**
+	 * * {@inheritDoc}
+	 */
 	@Override
 	public void validate (final Procedure procedure) throws ProcedureHandlerException
 	{
@@ -21,9 +24,11 @@ public class MoveProcedureHandler implements ProcedureHandler
 	}
 
 
-
 	/**
 	 * {@inheritDoc}
+	 */
+	/**
+	 * * {@inheritDoc}
 	 */
 	@Override
 	public void handle (final Procedure procedure) throws ProcedureHandlerException

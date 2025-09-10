@@ -5,6 +5,14 @@ import exception.ProcedureHandlerException;
 import model.procedure.Procedure;
 
 
+/**
+ * Interface defining the contract for handling and validating procedures.
+ * <br> <br>
+ * Implementations of this interface are responsible for providing specific logic to process and validate procedures based on their type and provided attributes.
+ *
+ * @see Procedure
+ * @see ProcedureHandlerException
+ */
 public interface ProcedureHandler
 {
 	/**
