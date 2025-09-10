@@ -11,6 +11,7 @@ import model.procedure.ProcedureType;
  */
 public class CleanProcedureHandler implements ProcedureHandler
 {
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -11,6 +11,7 @@ import model.procedure.ProcedureType;
  */
 public class RenameProcedureHandler implements ProcedureHandler
 {
+
 	/**
 	 * {@inheritDoc}
 	 */

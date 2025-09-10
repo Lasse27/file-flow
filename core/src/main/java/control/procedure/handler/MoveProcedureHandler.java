@@ -11,9 +11,7 @@ import model.procedure.ProcedureType;
  */
 public class MoveProcedureHandler implements ProcedureHandler
 {
-	/**
-	 * {@inheritDoc}
-	 */
+
 	/**
 	 * * {@inheritDoc}
 	 */
@@ -24,9 +22,7 @@ public class MoveProcedureHandler implements ProcedureHandler
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
+
 	/**
 	 * * {@inheritDoc}
 	 */

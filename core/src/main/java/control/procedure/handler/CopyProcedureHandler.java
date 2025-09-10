@@ -11,9 +11,7 @@ import model.procedure.ProcedureType;
  */
 public class CopyProcedureHandler implements ProcedureHandler
 {
-	/**
-	 * {@inheritDoc}
-	 */
+
 	/**
 	 * * {@inheritDoc}
 	 */

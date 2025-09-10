@@ -11,6 +11,7 @@ import model.procedure.ProcedureType;
  */
 public class ZipProcedureHandler implements ProcedureHandler
 {
+
 	/**
 	 * {@inheritDoc}
 	 */
