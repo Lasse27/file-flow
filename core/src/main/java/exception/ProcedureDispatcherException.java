@@ -4,14 +4,14 @@ package exception;
 /**
  * An exception that is thrown when an error occurs during the execution of a procedure.
  */
-public class ProcedureExecutorException extends RuntimeException
+public class ProcedureDispatcherException extends RuntimeException
 {
 	/**
 	 * Constructs a new ProcedureExecutorException with a specified error message.
 	 *
 	 * @param message the detailed error message explaining the cause of the exception.
 	 */
-	public ProcedureExecutorException (final String message)
+	public ProcedureDispatcherException (final String message)
 	{
 		super(message);
 	}
@@ -22,7 +22,7 @@ public class ProcedureExecutorException extends RuntimeException
 	 * Constructs a new runtime exception with {@code null} as its detail message.  The cause is not initialized, and may subsequently be initialized by a call to
 	 * {@link #initCause}.
 	 */
-	public ProcedureExecutorException ()
+	public ProcedureDispatcherException ()
 	{
 	}
 
@@ -38,7 +38,7 @@ public class ProcedureExecutorException extends RuntimeException
 	 *
 	 * @since 1.4
 	 */
-	public ProcedureExecutorException (final String message, final Throwable cause)
+	public ProcedureDispatcherException (final String message, final Throwable cause)
 	{
 		super(message, cause);
 	}
@@ -54,7 +54,7 @@ public class ProcedureExecutorException extends RuntimeException
 	 *
 	 * @since 1.4
 	 */
-	public ProcedureExecutorException (final Throwable cause)
+	public ProcedureDispatcherException (final Throwable cause)
 	{
 		super(cause);
 	}
@@ -71,7 +71,7 @@ public class ProcedureExecutorException extends RuntimeException
 	 *
 	 * @since 1.7
 	 */
-	public ProcedureExecutorException (final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
+	public ProcedureDispatcherException (final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace)
 	{
 		super(message, cause, enableSuppression, writableStackTrace);
 	}

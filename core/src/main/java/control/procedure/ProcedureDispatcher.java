@@ -2,7 +2,7 @@ package control.procedure;
 
 
 import control.procedure.handler.*;
-import exception.ProcedureExecutorException;
+import exception.ProcedureDispatcherException;
 import exception.ProcedureHandlerException;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @ToString
 @NoArgsConstructor
-public class ProcedureExecutor
+public class ProcedureDispatcher
 {
 
 	/**
@@ -40,15 +40,14 @@ public class ProcedureExecutor
 	 *
 	 * @param procedure the procedure to execute. It must provide a valid type through {@link Procedure#getType()}.
 	 *
-	 * @throws ProcedureHandlerException  if an error occurs during the handling of the procedure.
-	 * @throws ProcedureExecutorException if the procedure type is unsupported, or if an error occurs during execution.
+	 * @throws ProcedureDispatcherException if the procedure type is unsupported, or if an error occurs during execution.
 	 */
-	public void execute (final Procedure procedure) throws ProcedureHandlerException
+	public void dispatch (final Procedure procedure)
 	{
 		final ProcedureHandler handler = handlers.get(procedure.getType());
 		if (handler == null)
 		{
-			throw new ProcedureExecutorException("Unsupported procedure type: " + procedure.getType());
+			throw new ProcedureDispatcherException("Unsupported procedure type: " + procedure.getType());
 		}
 		try
 		{
@@ -56,7 +55,7 @@ public class ProcedureExecutor
 		}
 		catch (final ProcedureHandlerException exception)
 		{
-			throw new ProcedureExecutorException("Error executing procedure: " + procedure.getName(), exception);
+			throw new ProcedureDispatcherException("Error executing procedure: " + procedure.getName(), exception);
 		}
 	}
 }
