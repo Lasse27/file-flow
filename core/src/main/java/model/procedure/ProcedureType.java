@@ -1,19 +1,23 @@
 package model.procedure;
 
 
+/**
+ * Represents the various types of procedures that can be performed.
+ */
 public enum ProcedureType
 {
-	MOVE,
+	CLEAN,
 
 	COPY,
 
 	DELETE,
 
+	MOVE,
+
 	RENAME,
 
-	CLEAN,
-
-	ZIP,
-
 	UNZIP,
+
+	ZIP
+
 }
