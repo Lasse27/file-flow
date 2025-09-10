@@ -1,9 +1,11 @@
+package xml;
+
+
 import exception.XMLWriterException;
 import lombok.Getter;
 import lombok.ToString;
 import model.XMLConfiguration;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +33,7 @@ public class XMLWriter
 
 
     /**
-     * Constructs an XMLWriter instance using the path to an XML file.
+     * Constructs an xml.XMLWriter instance using the path to an XML file.
      *
      * @param filePath the path to the XML file to be written
      */
@@ -42,7 +44,7 @@ public class XMLWriter
 
 
     /**
-     * Constructs an XMLWriter instance using the provided XML file.
+     * Constructs an xml.XMLWriter instance using the provided XML file.
      *
      * @param xmlFile the XML file to which data will be written
      */
@@ -67,8 +69,9 @@ public class XMLWriter
             final DocumentBuilder builder = factory.newDocumentBuilder();
             final Document document = builder.newDocument();
 
-            // Write data
-            this.writeMetadata(document, configuration);
+            // Build document
+            final XMLBuilder xmlBuilder = new XMLBuilder(document);
+            document.appendChild(xmlBuilder.buildAll(configuration));
 
             // TODO: Write run-options
 
@@ -84,57 +87,7 @@ public class XMLWriter
     }
 
 
-    /**
-     * Writes metadata elements into the given XML document based on the provided configuration.
-     *
-     * @param document      the XML {@link Document} object where metadata will be written
-     * @param configuration the {@link XMLConfiguration} object containing metadata information
-     */
-    private void writeMetadata(final Document document, final XMLConfiguration configuration)
-    {
-        // Build nodes/elements
-        final Element metadata = document.createElement("Metadata");
-        final Element metaName = document.createElement("Name");
-        final Element metaVersion = document.createElement("Version");
-        final Element metaDescription = document.createElement("Description");
-        final Element metaAuthor = document.createElement("Author");
-        final Element metaCreated = document.createElement("Created");
 
-        // Fill nodes
-        metaName.setTextContent(configuration.getMeta().getName());
-        metaVersion.setTextContent(configuration.getMeta().getVersion());
-        metaDescription.setTextContent(configuration.getMeta().getDescription());
-        metaAuthor.setTextContent(configuration.getMeta().getAuthor());
-        metaCreated.setTextContent(configuration.getMeta().getCreated());
-
-        // Bundle nodes/elements
-        metadata.appendChild(metaName);
-        metadata.appendChild(metaVersion);
-        metadata.appendChild(metaDescription);
-        metadata.appendChild(metaAuthor);
-        metadata.appendChild(metaCreated);
-        document.appendChild(metadata);
-    }
-
-
-    /**
-     * Writes options elements into the provided XML document based on the given configuration.
-     *
-     * @param document      the XML {@link Document} object where the "Options" element will be written
-     * @param configuration the {@link XMLConfiguration} object containing information used to create the "Options" element
-     */
-    private void writeOptions(final Document document, final XMLConfiguration configuration)
-    {
-        final Element options = document.createElement("Options");
-        document.appendChild(options);
-    }
-
-
-    private void writeProcedures(final Document document, final XMLConfiguration configuration)
-    {
-        final Element procedures = document.createElement("Procedures");
-        document.appendChild(procedures);
-    }
 
 
     /**

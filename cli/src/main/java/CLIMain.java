@@ -1,5 +1,7 @@
 import model.XMLConfiguration;
 import model.XMLConfigurationMeta;
+import xml.XMLWriter;
+
 
 /**
  * The CLIMain class serves as the starting point of the application. It contains the main method which is the entry point for execution. This class cannot be instantiated.
