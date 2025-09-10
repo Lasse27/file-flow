@@ -6,18 +6,18 @@ package model.procedure;
  */
 public enum ProcedureType
 {
-	CLEAN,
+    CLEAN,
 
-	COPY,
+    COPY,
 
-	DELETE,
+    DELETE,
 
-	MOVE,
+    MOVE,
 
-	RENAME,
+    RENAME,
 
-	UNZIP,
+    UNZIP,
 
-	ZIP
+    ZIP
 
 }

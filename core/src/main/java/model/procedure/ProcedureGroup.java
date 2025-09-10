@@ -9,12 +9,12 @@ import java.util.List;
 @Data
 public class ProcedureGroup
 {
-	private String name;
+    private String name;
 
 
-	private String description;
+    private String description;
 
 
-	private List<Procedure> procedures;
+    private List<Procedure> procedures;
 
 }

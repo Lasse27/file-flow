@@ -12,23 +12,22 @@ import model.procedure.ProcedureType;
 public final class CopyProcedureHandler implements ProcedureHandler
 {
 
-	/**
-	 * * {@inheritDoc}
-	 */
-	@Override
-	public void validate (final Procedure procedure) throws ProcedureHandlerException
-	{
+    /**
+     * * {@inheritDoc}
+     */
+    @Override
+    public void validate(final Procedure procedure) throws ProcedureHandlerException
+    {
 
-	}
+    }
 
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handle(final Procedure procedure) throws ProcedureHandlerException
+    {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void handle (final Procedure procedure) throws ProcedureHandlerException
-	{
-
-	}
+    }
 }

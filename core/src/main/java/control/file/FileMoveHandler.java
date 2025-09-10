@@ -1,15 +1,17 @@
 package control.file;
 
+import exception.FileDiscoverException;
+import exception.FileMoverException;
 import lombok.Data;
 import lombok.ToString;
-import model.file.OnDuplicateRule;
+import model.file.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * The {@code FileMoveHandler} class provides functionality for moving files from a source location to a target location.
@@ -21,13 +23,13 @@ public class FileMoveHandler
 
     private Path targetPath;
 
-    private List<Object> includes;
+    private List<Pattern> includes = List.of();
 
-    private List<Object> excludes;
+    private List<Pattern> excludes = List.of();
 
-    private boolean recursive = false;
+    private FileDiscoverStrategy discoverStrategy = new FlatDiscoverStrategy();
 
-    private boolean includeDirectories = false;
+    private FileMoveStrategy fileMoveStrategy = new FlatMoveStrategy();
 
     private boolean keepStructure = false;
 
@@ -38,45 +40,126 @@ public class FileMoveHandler
 
     public void run()
     {
-        if (this.recursive)
-        {
-            this.moveRecursive();
-            return;
-        }
-        this.moveSingle();
+        final List<Path> discoveredFiles = this.discover();
+
+        final List<Path> filteredFiles = this.filter(discoveredFiles);
+
+        final Map<Path, Path> conflicts = this.move(filteredFiles);
     }
 
 
-    private void moveSingle()
+    /**
+     * Discovers and retrieves a list of file paths from the source path using the configured discovery strategy.
+     * In case of an error during the discovery process, it wraps the exception in a {@code FileMoverException}.
+     *
+     * @return a list of {@code Path} objects representing the discovered files.
+     * @throws FileMoverException if the discovery process fails due to a {@code FileDiscoverException}.
+     */
+    private List<Path> discover()
     {
-
-        // get all file system items needed
-        try (final Stream<Path> pathStream = Files.list(this.sourcePath))
+        try
         {
-            final Iterator<Path> iterator = pathStream.iterator();
-            while (iterator.hasNext())
+            return this.discoverStrategy.discover(this.sourcePath);
+        }
+        catch (final FileDiscoverException exception)
+        {
+            throw new FileMoverException(
+                    "Failed to discover files in source path: " + this.sourcePath.toString() + " due to: " + exception.getMessage(), exception);
+        }
+    }
+
+
+    private boolean checkDiscover(final Collection<Path> discoveredPaths)
+    {
+        if (discoveredPaths.isEmpty())
+        {
+            System.out.println("No files found in source path: " + this.sourcePath.toString() + " to move.");
+            return false;
+        }
+        System.out.println("Discovered files:");
+        for (final Path path : discoveredPaths)
+        {
+            System.out.println("\t+ " + path.toString());
+        }
+        return true;
+    }
+
+
+    private List<Path> filter(final List<Path> paths)
+    {
+        if (this.includes.isEmpty() && this.excludes.isEmpty())
+        {
+            return paths;
+        }
+        final List<Path> filteredPaths = new ArrayList<>();
+        for (final Path path : paths)
+        {
+            // ONLY EXCLUDES
+            if (this.includes.isEmpty() && !this.excludes.isEmpty())
             {
-                final Path path = iterator.next();
-                if (Files.isDirectory(path) && this.includeDirectories)
+                if (this.excludes.stream().anyMatch(pattern -> pattern.matcher(path.toString()).find()))
                 {
-                    Files.move(path, this.targetPath.resolve(path.getFileName()));
+                    continue;
+                }
+                filteredPaths.add(path);
+            }
+            // ONLY INCLUDES
+            else if (!this.includes.isEmpty() && this.excludes.isEmpty())
+            {
+                if (this.includes.stream().anyMatch(pattern -> pattern.matcher(path.toString()).find()))
+                {
+                    filteredPaths.add(path);
                 }
             }
+            // BOTH
+            else if (this.includes.stream().anyMatch(pattern -> pattern.matcher(path.toString()).find()))
+            {
+                if (this.excludes.stream().anyMatch(pattern -> pattern.matcher(path.toString()).find()))
+                {
+                    continue;
+                }
+                filteredPaths.add(path);
+            }
         }
-        catch (final IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-
-        // filter by includes/excludes
-
-        // move to the target directory
+        return filteredPaths;
     }
 
 
-    private void moveRecursive()
+    private boolean checkFilter(final List<Path> filteredPaths)
     {
+        if (filteredPaths.isEmpty())
+        {
+            System.out.println("No files found to move.");
+            return false;
+        }
+        System.out.println("Filtered files:");
+        for (final Path path : filteredPaths)
+        {
+            System.out.println("\t+ " + path.toString());
+        }
+        return true;
+    }
 
+
+    private Map<Path, Path> move(final List<Path> filteredFiles)
+    {
+        return this.fileMoveStrategy.move(filteredFiles, this.targetPath, FileMoveRule.KEEP_ATTRIBUTES);
+    }
+
+
+    private boolean checkMove(final Map<Path, Path> conflicts)
+    {
+        if (conflicts.isEmpty())
+        {
+            System.out.println("No conflicts occurred.");
+            return false;
+        }
+        System.out.println("Conflicts:");
+        for (final Map.Entry<Path, Path> entry : conflicts.entrySet())
+        {
+            System.out.println("\t+ " + entry.getKey().toString() + " -> " + entry.getValue().toString());
+        }
+        return true;
     }
 
 
@@ -86,12 +169,21 @@ public class FileMoveHandler
         private final FileMoveHandler handler;
 
 
+        /**
+         * Creates a new Builder instance with a default FileMoveHandler.
+         */
         public Builder()
         {
             this.handler = new FileMoveHandler();
         }
 
 
+        /**
+         * Sets the source path for file operations.
+         *
+         * @param sourcePath the path where files will be moved from
+         * @return this builder instance for method chaining
+         */
         public Builder withSourcePath(final Path sourcePath)
         {
             this.handler.setSourcePath(sourcePath);
@@ -99,6 +191,12 @@ public class FileMoveHandler
         }
 
 
+        /**
+         * Sets the target path for file operations.
+         *
+         * @param targetPath the path where files will be moved to
+         * @return this builder instance for method chaining
+         */
         public Builder withTargetPath(final Path targetPath)
         {
             this.handler.setTargetPath(targetPath);
@@ -106,34 +204,51 @@ public class FileMoveHandler
         }
 
 
-        public Builder withIncludes(final List<Object> includes)
+        /**
+         * Sets patterns for including files in the operation.
+         *
+         * @param includes list of patterns that files must match to be included
+         * @return this builder instance for method chaining
+         */
+        public Builder withIncludes(final List<Pattern> includes)
         {
             this.handler.setIncludes(includes);
             return this;
         }
 
 
-        public Builder withExcludes(final List<Object> excludes)
+        /**
+         * Sets patterns for excluding files from the operation.
+         *
+         * @param excludes list of patterns that if matched will exclude files
+         * @return this builder instance for method chaining
+         */
+        public Builder withExcludes(final List<Pattern> excludes)
         {
             this.handler.setExcludes(excludes);
             return this;
         }
 
 
-        public Builder withRecursive(final boolean recursive)
+        /**
+         * Sets the strategy for discovering files.
+         *
+         * @param strategy the file discovery strategy to use
+         * @return this builder instance for method chaining
+         */
+        public Builder withDiscoverStrategy(final FileDiscoverStrategy strategy)
         {
-            this.handler.setRecursive(recursive);
+            this.handler.setDiscoverStrategy(strategy);
             return this;
         }
 
 
-        public Builder withIncludeDirectories(final boolean includeDirectories)
-        {
-            this.handler.setIncludeDirectories(includeDirectories);
-            return this;
-        }
-
-
+        /**
+         * Sets whether to maintain directory structure when moving files.
+         *
+         * @param keepStructure true to maintain structure, false otherwise
+         * @return this builder instance for method chaining
+         */
         public Builder withKeepStructure(final boolean keepStructure)
         {
             this.handler.setKeepStructure(keepStructure);
@@ -141,6 +256,12 @@ public class FileMoveHandler
         }
 
 
+        /**
+         * Sets whether to copy file attributes during move operation.
+         *
+         * @param copyAttributes true to copy attributes, false otherwise
+         * @return this builder instance for method chaining
+         */
         public Builder withCopyAttributes(final boolean copyAttributes)
         {
             this.handler.setCopyAttributes(copyAttributes);
@@ -148,6 +269,12 @@ public class FileMoveHandler
         }
 
 
+        /**
+         * Sets the rule for handling duplicate files.
+         *
+         * @param onDuplicateRule the rule to apply when duplicates are found
+         * @return this builder instance for method chaining
+         */
         public Builder withOnDuplicateRule(final OnDuplicateRule onDuplicateRule)
         {
             this.handler.setOnDuplicateRule(onDuplicateRule);
@@ -155,6 +282,11 @@ public class FileMoveHandler
         }
 
 
+        /**
+         * Builds and returns the configured FileMoveHandler instance.
+         *
+         * @return the configured FileMoveHandler
+         */
         public FileMoveHandler build()
         {
             return this.handler;

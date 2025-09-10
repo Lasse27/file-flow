@@ -16,5 +16,5 @@ import java.util.List;
 @Data
 public class XMLConfigurationProcedures
 {
-	private List<ProcedureGroup> procedureGroups;
+    private List<ProcedureGroup> procedureGroups;
 }

@@ -11,6 +11,7 @@ import model.procedure.ProcedureType;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -18,6 +19,44 @@ import java.util.List;
  */
 public final class MoveProcedureHandler implements ProcedureHandler
 {
+
+    private static ProcedureOption getOption(final Collection<ProcedureOption> options, final ProcedureOptionType type) throws ProcedureHandlerException
+    {
+        return options.stream().filter(opt -> opt.getType() == type).findFirst()
+                .orElseThrow(() -> new ProcedureHandlerException("No " + type + " option specified."));
+    }
+
+
+    private static List<Pattern> getPatterns(final Collection<ProcedureOption> options, final ProcedureOptionType type)
+    {
+        return options.stream().filter(opt -> opt.getType() == type).map(opt -> Pattern.compile(opt.getValue())).toList();
+    }
+
+
+    private static void validateOptionsInstance(final Collection<ProcedureOption> options) throws ProcedureHandlerException
+    {
+        if (options == null || options.isEmpty())
+        {
+            throw new ProcedureHandlerException("No options specified for move procedure.");
+        }
+    }
+
+
+    private static void validateOptionsContent(final Collection<ProcedureOption> options) throws ProcedureHandlerException
+    {
+        // Check if a source option exists
+        if (options.stream().noneMatch(option -> option.getType() == ProcedureOptionType.SOURCE))
+        {
+            throw new ProcedureHandlerException("No source option specified for move procedure.");
+        }
+
+        // Check if a target option exists
+        else if (options.stream().noneMatch(option -> option.getType() == ProcedureOptionType.TARGET))
+        {
+            throw new ProcedureHandlerException("No target option specified for move procedure.");
+        }
+    }
+
 
     /**
      * {@inheritDoc}
@@ -49,68 +88,18 @@ public final class MoveProcedureHandler implements ProcedureHandler
          * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
         final List<ProcedureOption> options = procedure.getOptions();
-        final ProcedureOption sourceOption = options.stream()
-                .filter(option -> option.getType() == ProcedureOptionType.SOURCE)
-                .findFirst()
-                .orElseThrow(() -> new ProcedureHandlerException("No source option specified for move procedure."));
+        final Path sourcePath = Path.of(getOption(options, ProcedureOptionType.SOURCE).getValue());
+        final Path targetPath = Path.of(getOption(options, ProcedureOptionType.SOURCE).getValue());
+        final List<Pattern> includes = getPatterns(options, ProcedureOptionType.INCLUDE);
+        final List<Pattern> excludes = getPatterns(options, ProcedureOptionType.EXCLUDE);
 
-        final ProcedureOption target = options.stream()
-                .filter(option -> option.getType() == ProcedureOptionType.TARGET)
-                .findFirst()
-                .orElseThrow(() -> new ProcedureHandlerException("No target option specified for move procedure."));
-
-        final List<ProcedureOption> includes = options.stream()
-                .filter(option -> option.getType() == ProcedureOptionType.INCLUDE)
-                .toList();
-
-        final List<ProcedureOption> excludes = options.stream()
-                .filter(option -> option.getType() == ProcedureOptionType.EXCLUDE)
-                .toList();
-
-        final List<ProcedureOption> rules = options.stream()
-                .filter(option -> option.getType() == ProcedureOptionType.RULE)
-                .toList();
-
-        final Path sourcePath = Path.of(sourceOption.getValue());
-
-        final Path targetPath = Path.of(target.getValue());
-
-        // Build FileMoveHandler
         final FileMoveHandler fileMoveHandler = new FileMoveHandler.Builder()
                 .withSourcePath(sourcePath)
                 .withTargetPath(targetPath)
+                .withIncludes(includes)
+                .withExcludes(excludes)
                 .build();
 
-        // Run the actual process
         fileMoveHandler.run();
-    }
-
-
-    private static void validateOptionsInstance(final Collection<ProcedureOption> options) throws ProcedureHandlerException
-    {
-        if (options == null || options.isEmpty())
-        {
-            throw new ProcedureHandlerException("No options specified for move procedure.");
-        }
-        else if (options.size() < 2)
-        {
-            throw new ProcedureHandlerException("Move procedure must have exactly two options.");
-        }
-    }
-
-
-    private static void validateOptionsContent(final Collection<ProcedureOption> options) throws ProcedureHandlerException
-    {
-        // Check if a source option exists
-        if (options.stream().noneMatch(option -> option.getType() == ProcedureOptionType.SOURCE))
-        {
-            throw new ProcedureHandlerException("No source option specified for move procedure.");
-        }
-
-        // Check if a target option exists
-        else if (options.stream().noneMatch(option -> option.getType() == ProcedureOptionType.TARGET))
-        {
-            throw new ProcedureHandlerException("No target option specified for move procedure.");
-        }
     }
 }
