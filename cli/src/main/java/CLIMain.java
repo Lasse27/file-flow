@@ -38,7 +38,7 @@ public final class CLIMain
 
         final Procedure procedure = new Procedure.Builder()
                 .withName("Test")
-                .withId("Test-1")
+                .withId("Test-2")
                 .withType(ProcedureType.MOVE)
                 .withOption(sourceOption)
                 .withOption(targetOption)
