@@ -1,6 +1,6 @@
-import model.XMLConfiguration;
-import model.XMLConfigurationMeta;
-import xml.XMLWriter;
+import control.xml.XMLWriter;
+import model.xml.XMLConfiguration;
+import model.xml.XMLConfigurationMeta;
 
 
 /**
@@ -24,7 +24,9 @@ public final class CLIMain
 	public static void main (final String[] args)
 	{
 		final XMLConfigurationMeta metadata = new XMLConfigurationMeta("Lasse", "1.0.0", "Descr", "lasste", "10.01.1010");
-		final XMLConfiguration configuration = new XMLConfiguration(metadata);
+		final XMLConfiguration configuration = new XMLConfiguration.Builder()
+			                                       .withMeta(metadata)
+			                                       .build();
 		final XMLWriter writer = new XMLWriter("C:/Users/Lasse/Desktop/output.xml");
 		writer.write(configuration);
 	}

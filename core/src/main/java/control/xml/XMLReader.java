@@ -1,10 +1,10 @@
-package xml;
+package control.xml;
 
 
 import exception.XMLReaderException;
 import lombok.Getter;
 import lombok.ToString;
-import model.XMLConfiguration;
+import model.xml.XMLConfiguration;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -16,7 +16,8 @@ import java.io.IOException;
 
 
 /**
- * The xml.XMLReader class encapsulates functionality for reading and parsing XML files. This class supports initializing an XML reader using either a file path or a {@code
+ * The control.xml.XMLReader class encapsulates functionality for reading and parsing XML files. This class supports initializing an XML reader using either a file path or
+ * a {@code
  * File}
  * object. It processes the specified XML file and provides a mechanism for handling XML-related operations.
  */
@@ -26,7 +27,8 @@ public class XMLReader
 {
 
     /**
-     * Represents the XML file to be read and parsed. This file is specified during the construction of an {@code xml.XMLReader} instance and serves as the primary source
+     * Represents the XML file to be read and parsed. This file is specified during the construction of an {@code control.xml.XMLReader} instance and serves as the primary
+     * source
      * for XML
      * data processing.
      */
@@ -34,7 +36,8 @@ public class XMLReader
 
 
     /**
-     * Constructs an xml.XMLReader instance using the provided file path. The file path is converted into a File object, which is then used for reading and parsing XML data.
+     * Constructs an control.xml.XMLReader instance using the provided file path. The file path is converted into a File object, which is then used for reading and parsing
+     * XML data.
      *
      * @param filePath the path to the XML file to be read
      */
@@ -45,7 +48,7 @@ public class XMLReader
 
 
     /**
-     * Constructs an xml.XMLReader instance using the provided XML file. The supplied file will be used for reading and parsing XML data.
+     * Constructs an control.xml.XMLReader instance using the provided XML file. The supplied file will be used for reading and parsing XML data.
      *
      * @param xmlFile the XML file to be read and parsed
      */
@@ -56,7 +59,7 @@ public class XMLReader
 
 
     /**
-     * Reads and parses the XML file associated with this {@code xml.XMLReader} instance.
+     * Reads and parses the XML file associated with this {@code control.xml.XMLReader} instance.
      *
      * @return an {@code XMLConfiguration} object representing the configuration data in the XML file.
      * @throws XMLReaderException if the XML file cannot be read or parsed
