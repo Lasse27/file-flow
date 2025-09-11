@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * The {@code FileMoveHandler} class provides functionality for moving files from a source location to a target location.
  */
 @Data
-public class FileMoveHandler
+public class FileMoveExecutor
 {
     private Path sourcePath;
 
@@ -35,7 +35,6 @@ public class FileMoveHandler
 
     private boolean copyAttributes = false;
 
-    private OnDuplicateRule onDuplicateRule;
 
 
     public void run()
@@ -125,22 +124,6 @@ public class FileMoveHandler
     }
 
 
-    private boolean checkFilter(final List<Path> filteredPaths)
-    {
-        if (filteredPaths.isEmpty())
-        {
-            System.out.println("No files found to move.");
-            return false;
-        }
-        System.out.println("Filtered files:");
-        for (final Path path : filteredPaths)
-        {
-            System.out.println("\t+ " + path.toString());
-        }
-        return true;
-    }
-
-
     private Map<Path, Path> move(final List<Path> filteredFiles)
     {
         return this.fileMoveStrategy.move(filteredFiles, this.targetPath, FileMoveRule.KEEP_ATTRIBUTES);
@@ -166,7 +149,7 @@ public class FileMoveHandler
     @ToString
     public static class Builder
     {
-        private final FileMoveHandler handler;
+        private final FileMoveExecutor handler;
 
 
         /**
@@ -174,7 +157,7 @@ public class FileMoveHandler
          */
         public Builder()
         {
-            this.handler = new FileMoveHandler();
+            this.handler = new FileMoveExecutor();
         }
 
 
@@ -270,24 +253,11 @@ public class FileMoveHandler
 
 
         /**
-         * Sets the rule for handling duplicate files.
-         *
-         * @param onDuplicateRule the rule to apply when duplicates are found
-         * @return this builder instance for method chaining
-         */
-        public Builder withOnDuplicateRule(final OnDuplicateRule onDuplicateRule)
-        {
-            this.handler.setOnDuplicateRule(onDuplicateRule);
-            return this;
-        }
-
-
-        /**
          * Builds and returns the configured FileMoveHandler instance.
          *
          * @return the configured FileMoveHandler
          */
-        public FileMoveHandler build()
+        public FileMoveExecutor build ()
         {
             return this.handler;
         }

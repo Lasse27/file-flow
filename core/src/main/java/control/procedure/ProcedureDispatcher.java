@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import model.procedure.Procedure;
 import model.procedure.ProcedureType;
+import utility.Contracts;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 
 /**
@@ -20,41 +23,92 @@ import java.util.Map;
 public class ProcedureDispatcher
 {
 
-    /**
-     * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
-     */
-    private static final Map<ProcedureType, ProcedureHandler> handlers = Map.of(
-            ProcedureType.MOVE, new MoveProcedureHandler(),
-            ProcedureType.CLEAN, new CleanProcedureHandler(),
-            ProcedureType.COPY, new CopyProcedureHandler(),
-            ProcedureType.DELETE, new DeleteProcedureHandler(),
-            ProcedureType.ZIP, new ZipProcedureHandler(),
-            ProcedureType.UNZIP, new UnzipProcedureHandler(),
-            ProcedureType.RENAME, new RenameProcedureHandler()
-    );
+	/**
+	 * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
+	 */
+	private static final Map<ProcedureType, Supplier<ProcedureHandler>> handlers = Map.of(
+		ProcedureType.MOVE, MoveProcedureHandler::new,
+		ProcedureType.CLEAN, CleanProcedureHandler::new,
+		ProcedureType.COPY, CopyProcedureHandler::new,
+		ProcedureType.DELETE, DeleteProcedureHandler::new,
+		ProcedureType.ZIP, ZipProcedureHandler::new,
+		ProcedureType.UNZIP, UnzipProcedureHandler::new,
+		ProcedureType.RENAME, RenameProcedureHandler::new
+	);
 
 
-    /**
-     * Executes the given procedure using the appropriate handler based on its type.
-     *
-     * @param procedure the procedure to execute. It must provide a valid type through {@link Procedure#getType()}.
-     * @throws ProcedureDispatcherException if the procedure type is unsupported, or if an error occurs during execution.
-     */
-    public void dispatch(final Procedure procedure)
-    {
-        final ProcedureHandler handler = handlers.get(procedure.getType());
-        if (handler == null)
-        {
-            throw new ProcedureDispatcherException("Unsupported procedure type: " + procedure.getType());
-        }
-        try
-        {
-            final long millis = System.currentTimeMillis();
-            handler.handle(procedure);
-        }
-        catch (final ProcedureHandlerException exception)
-        {
-            throw new ProcedureDispatcherException("Error executing procedure: " + procedure.getName(), exception);
-        }
-    }
+
+	/**
+	 * Dispatches a given {@link Procedure} to the appropriate handler for execution.
+	 *
+	 * @param procedure the procedure to be dispatched. This object contains the type of procedure and its associated options. The procedure's type is used to determine the
+	 *                  appropriate handler for execution.
+	 */
+	public void dispatch (final Procedure procedure)
+	{
+		// Contracts
+		Contracts.notNull(procedure, () -> new ProcedureDispatcherException("No procedure specified."));
+
+		// Execute handler
+		this.executeHandler(
+			this.getHandlerForProcedure(procedure),
+			procedure
+		);
+	}
+
+
+
+	/**
+	 * Retrieves the appropriate {@link ProcedureHandler} for a given {@link Procedure}, based on its type. If the procedure type is unsupported or null, a
+	 * {@link ProcedureDispatcherException} is thrown.
+	 *
+	 * @param procedure the {@link Procedure} for which the handler is to be retrieved. Must not be null and must have a valid type defined.
+	 *
+	 * @return the corresponding {@link ProcedureHandler} for the specified procedure type.
+	 *
+	 * @throws ProcedureDispatcherException if the procedure is null, its type is null, or the type does not have a corresponding handler.
+	 */
+	public ProcedureHandler getHandlerForProcedure (final Procedure procedure)
+	{
+		// Contracts
+		Contracts.notNull(procedure, () -> new ProcedureDispatcherException("No procedure specified."));
+		Contracts.notNull(procedure.getType(), () -> new ProcedureDispatcherException("No procedure type is specified."));
+
+		// Get handler
+		return Optional.ofNullable(handlers.get(procedure.getType()))
+			       .map(Supplier::get)
+			       .orElseThrow(() -> new ProcedureDispatcherException(
+				       String.format("Unsupported procedure type: %s", procedure.getType())
+			       ));
+	}
+
+
+
+	/**
+	 * Executes the specified {@link ProcedureHandler} on a given {@link Procedure}. If the handler fails to process the procedure, a {@link ProcedureDispatcherException} is
+	 * thrown with details of the failure.
+	 *
+	 * @param handler   the {@link ProcedureHandler} responsible for processing the {@link Procedure}. Must not be null.
+	 * @param procedure the {@link Procedure} to be handled. Must contain valid attributes necessary for its execution.
+	 *
+	 * @throws ProcedureDispatcherException if an error occurs during the procedure handling, wrapping the original {@link ProcedureHandlerException}.
+	 */
+	private void executeHandler (final ProcedureHandler handler, final Procedure procedure)
+	{
+		// Contracts
+		Contracts.notNull(handler, () -> new ProcedureDispatcherException("No handler specified."));
+		Contracts.notNull(procedure, () -> new ProcedureDispatcherException("No procedure specified."));
+
+		try
+		{
+			handler.handle(procedure);
+		}
+		catch (final ProcedureHandlerException exception)
+		{
+			throw new ProcedureDispatcherException(
+				String.format("Error executing procedure: %s", procedure.getName()),
+				exception
+			);
+		}
+	}
 }
