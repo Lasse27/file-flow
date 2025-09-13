@@ -1,6 +1,7 @@
 package model.xml;
 
 
+import lombok.Builder;
 import lombok.Data;
 import model.procedure.ProcedureGroup;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * configuration.
  */
 @Data
+@Builder
 public class XMLConfigurationProcedures
 {
     private List<ProcedureGroup> procedureGroups;

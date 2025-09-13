@@ -22,8 +22,7 @@ public enum ProcedureOptionType
     private final String identifier;
 
 
-
-    ProcedureOptionType (final String identifier)
+    ProcedureOptionType(final String identifier)
     {
         this.identifier = identifier;
     }
