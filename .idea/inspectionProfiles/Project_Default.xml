@@ -89,7 +89,7 @@
       <option name="m_includeLibraryClasses" value="false" />
       <option name="m_limit" value="15" />
     </inspection_tool>
-    <inspection_tool class="ClassHasNoToStringMethod" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="ClassHasNoToStringMethod" enabled="true" level="INFORMATION" enabled_by_default="true">
       <option name="excludeClassNames" value="" />
       <option name="excludeException" value="false" />
       <option name="excludeDeprecated" value="false" />

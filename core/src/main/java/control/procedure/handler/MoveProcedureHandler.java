@@ -1,7 +1,7 @@
 package control.procedure.handler;
 
 
-import control.file.FileMoveExecutor;
+import control.procedure.executor.MoveProcedureExecutor;
 import exception.ProcedureHandlerException;
 import model.procedure.Procedure;
 import model.procedure.ProcedureOption;
@@ -90,26 +90,23 @@ public final class MoveProcedureHandler implements ProcedureHandler
 	@Override
 	public void handle (final Procedure procedure) throws ProcedureHandlerException
 	{
-		// validate content of procedure before running - throws if invalid
+		// Validation
 		this.validate(procedure);
 
-		/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		 *  Mapping
-		 * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
+		// Mapping
 		final List<ProcedureOption> options = procedure.getOptions();
 		final Path sourcePath = Path.of(getOption(options, ProcedureOptionType.SOURCE).getValue());
 		final Path targetPath = Path.of(getOption(options, ProcedureOptionType.TARGET).getValue());
 		final List<Pattern> includes = getPatterns(options, ProcedureOptionType.INCLUDE);
 		final List<Pattern> excludes = getPatterns(options, ProcedureOptionType.EXCLUDE);
 
-		final FileMoveExecutor fileMoveExecutor = new FileMoveExecutor.Builder()
+		final MoveProcedureExecutor moveProcedureExecutor = new MoveProcedureExecutor.Builder()
 			                                          .withSourcePath(sourcePath)
 			                                          .withTargetPath(targetPath)
 			                                          .withIncludes(includes)
 			                                          .withExcludes(excludes)
 			                                          .build();
 
-		fileMoveExecutor.run();
+		moveProcedureExecutor.execute();
 	}
 }

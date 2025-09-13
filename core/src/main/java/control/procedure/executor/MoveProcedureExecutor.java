@@ -1,4 +1,4 @@
-package control.file;
+package control.procedure.executor;
 
 import exception.FileDiscoverException;
 import exception.FileMoverException;
@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * The {@code FileMoveHandler} class provides functionality for moving files from a source location to a target location.
  */
 @Data
-public class FileMoveExecutor
+public class MoveProcedureExecutor implements ProcedureExecutor
 {
     private Path sourcePath;
 
@@ -36,14 +36,19 @@ public class FileMoveExecutor
     private boolean copyAttributes = false;
 
 
-
-    public void run()
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ExecutionResult execute()
     {
         final List<Path> discoveredFiles = this.discover();
 
         final List<Path> filteredFiles = this.filter(discoveredFiles);
 
         final Map<Path, Path> conflicts = this.move(filteredFiles);
+
+        return ExecutionResult.ok();
     }
 
 
@@ -149,7 +154,7 @@ public class FileMoveExecutor
     @ToString
     public static class Builder
     {
-        private final FileMoveExecutor handler;
+        private final MoveProcedureExecutor handler;
 
 
         /**
@@ -157,7 +162,7 @@ public class FileMoveExecutor
          */
         public Builder()
         {
-            this.handler = new FileMoveExecutor();
+            this.handler = new MoveProcedureExecutor();
         }
 
 
@@ -257,7 +262,7 @@ public class FileMoveExecutor
          *
          * @return the configured FileMoveHandler
          */
-        public FileMoveExecutor build ()
+        public MoveProcedureExecutor build()
         {
             return this.handler;
         }
