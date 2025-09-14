@@ -19,22 +19,6 @@ import java.util.Collection;
 public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
 {
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void validate(final MoveProcedure procedure)
-    {
-//        final List<ProcedureOption> options = procedure.getOptions();
-//
-//        // Check if instance valid
-//        validateOptionsInstance(options);
-//
-//        // Check if required values are existing
-//        validateOptionsContent(options);
-    }
-
-
-    /**
      * Validates that the given collection of procedure options is not null and not empty.
      * If the collection is invalid, throws a {@link ProcedureValidatorException}.
      *
@@ -69,5 +53,21 @@ public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
         {
             throw new ProcedureValidatorException("No target option specified for move procedure.");
         }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void validate(final MoveProcedure procedure)
+    {
+//        final List<ProcedureOption> options = procedure.getOptions();
+//
+//        // Check if instance valid
+//        validateOptionsInstance(options);
+//
+//        // Check if required values are existing
+//        validateOptionsContent(options);
     }
 }

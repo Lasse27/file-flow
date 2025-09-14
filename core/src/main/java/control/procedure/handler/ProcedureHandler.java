@@ -3,7 +3,6 @@ package control.procedure.handler;
 
 import exception.ProcedureHandlerException;
 import model.listener.Listener;
-import model.listener.ListenerEvent;
 import model.procedure.Procedure;
 import model.shared.Registrable;
 

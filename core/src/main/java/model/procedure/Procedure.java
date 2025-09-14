@@ -1,14 +1,13 @@
 package model.procedure;
 
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 
 /**
  * Represents a procedure as part of a configuration or workflow.
- * */
+ */
 @Data
 @SuperBuilder
 public abstract class Procedure

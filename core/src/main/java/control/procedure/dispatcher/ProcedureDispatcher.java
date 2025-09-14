@@ -29,8 +29,6 @@ import java.util.function.Supplier;
 public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Procedure, ProcedureHandler<? extends Procedure>>
 {
 
-    private final ListenerCollection listeners = ListenerCollection.builder().build();
-
     /**
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
      */
@@ -43,6 +41,8 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
 //            UnzipProcedureHandler.class, UnzipProcedureHandler::new,
 //            RenameProcedureHandler.class, RenameProcedureHandler::new
     );
+
+    private final ListenerCollection listeners = ListenerCollection.builder().build();
 
 
     /**
@@ -123,6 +123,7 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -131,6 +132,7 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
     {
         this.listeners.register(listener);
     }
+
 
     /**
      * {@inheritDoc}
