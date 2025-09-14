@@ -20,7 +20,7 @@ public interface ProcedureHandler<T extends Procedure>
      * Executes the handling of a procedure. The specific implementation details are determined by the classes implementing this method. This method serves as the entry point
      * for any operations that need to be performed as part of the procedure's handling process.
      *
-     * @param procedure the procedure to be handled. Must specify a valid type through {@link Procedure#getType()}.
+     * @param procedure the procedure to be handled.
      * @throws ProcedureHandlerException if an error occurs during the procedure handling.
      */
     public void handle(final T procedure) throws ProcedureHandlerException;
