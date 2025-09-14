@@ -1,4 +1,4 @@
-import control.procedure.ProcedureDispatcher;
+import control.procedure.dispatcher.ProcedureDispatcher;
 import listener.ConsoleListener;
 import model.file.FlatDiscoverStrategy;
 import model.file.FlatMoveStrategy;

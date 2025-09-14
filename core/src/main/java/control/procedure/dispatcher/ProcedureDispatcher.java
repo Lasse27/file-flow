@@ -1,7 +1,8 @@
-package control.procedure;
+package control.procedure.dispatcher;
 
 
-import control.procedure.handler.*;
+import control.procedure.handler.MoveProcedureHandler;
+import control.procedure.handler.ProcedureHandler;
 import exception.ProcedureDispatcherException;
 import exception.ProcedureHandlerException;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import model.listener.ListenerCollection;
 import model.listener.ListenerEvent;
 import model.procedure.Procedure;
 import model.procedure.ProcedureType;
+import model.procedure.types.MoveProcedure;
 import model.shared.Registrable;
 import utility.Contracts;
 
@@ -32,14 +34,14 @@ public class ProcedureDispatcher implements Registrable<Listener>
     /**
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
      */
-    private static final Map<ProcedureType, Supplier<ProcedureHandler<? extends Procedure>>> handlers = Map.of(
-            ProcedureType.MOVE, MoveProcedureHandler::new,
-            ProcedureType.CLEAN, CleanProcedureHandler::new,
-            ProcedureType.COPY, CopyProcedureHandler::new,
-            ProcedureType.DELETE, DeleteProcedureHandler::new,
-            ProcedureType.ZIP, ZipProcedureHandler::new,
-            ProcedureType.UNZIP, UnzipProcedureHandler::new,
-            ProcedureType.RENAME, RenameProcedureHandler::new
+    private static final Map<Class<? extends Procedure>, Supplier<ProcedureHandler<? extends Procedure>>> handlers = Map.of(
+            MoveProcedure.class, MoveProcedureHandler::new
+//            CleanProcedureHandler.class, CleanProcedureHandler::new,
+//            CopyProcedureHandler.class, CopyProcedureHandler::new,
+//            DeleteProcedureHandler.class, DeleteProcedureHandler::new,
+//            ZipProcedureHandler.class, ZipProcedureHandler::new,
+//            UnzipProcedureHandler.class, UnzipProcedureHandler::new,
+//            RenameProcedureHandler.class, RenameProcedureHandler::new
     );
 
 
@@ -51,12 +53,9 @@ public class ProcedureDispatcher implements Registrable<Listener>
      */
     public void dispatch(final Procedure procedure)
     {
-        // Contracts
-        Contracts.notNull(procedure, () -> new ProcedureDispatcherException("No procedure specified."));
-
         // Execute handler
         this.executeHandler(
-                this.getHandlerForProcedure(procedure),
+                this.getHandler(procedure),
                 procedure
         );
     }
@@ -70,17 +69,16 @@ public class ProcedureDispatcher implements Registrable<Listener>
      * @return the corresponding {@link ProcedureHandler} for the specified procedure type.
      * @throws ProcedureDispatcherException if the procedure is null, its type is null, or the type does not have a corresponding handler.
      */
-    public ProcedureHandler getHandlerForProcedure(final Procedure procedure)
+    public ProcedureHandler<? extends Procedure> getHandler(final Procedure procedure)
     {
         // Contracts
         Contracts.notNull(procedure, () -> new ProcedureDispatcherException("No procedure specified."));
-        Contracts.notNull(procedure.getType(), () -> new ProcedureDispatcherException("No procedure type is specified."));
 
         // Get handler
-        return Optional.ofNullable(handlers.get(procedure.getType()))
+        return Optional.ofNullable(handlers.get(procedure.getClass()))
                 .map(Supplier::get)
                 .orElseThrow(() -> new ProcedureDispatcherException(
-                        String.format("Unsupported procedure type: %s", procedure.getType())
+                        String.format("Unsupported procedure type: %s", procedure.getClass().getSimpleName())
                 ));
     }
 
@@ -106,6 +104,7 @@ public class ProcedureDispatcher implements Registrable<Listener>
                     .message(String.format("Executing procedure: %s", procedure.getName()))
                     .build());
 
+            //noinspection unchecked
             handler.handle(procedure);
 
             this.listeners.onEnd(ListenerEvent.builder()

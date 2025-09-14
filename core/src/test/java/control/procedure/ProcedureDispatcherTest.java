@@ -1,6 +1,7 @@
 package control.procedure;
 
 
+import control.procedure.dispatcher.ProcedureDispatcher;
 import control.procedure.handler.*;
 import exception.ProcedureDispatcherException;
 import model.procedure.Procedure;
@@ -32,12 +33,12 @@ class ProcedureDispatcherTest
 
     @Test
     @DisplayName("Test getHandlerForProcedure() with an invalid procedure type")
-    void testGetHandlerForProcedure_InvalidProcedureType()
+    void testGetHandlerType()
     {
         final ProcedureDispatcher dispatcher = new ProcedureDispatcher();
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(null).build();
 
-        assertThrows(ProcedureDispatcherException.class, () -> dispatcher.getHandlerForProcedure(procedure), MSG_ON_MISSING_THROW);
+        assertThrows(ProcedureDispatcherException.class, () -> dispatcher.getHandler(procedure), MSG_ON_MISSING_THROW);
     }
 
 
@@ -50,7 +51,7 @@ class ProcedureDispatcherTest
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(ProcedureType.MOVE)
                 .build();
 
-        final ProcedureHandler handler = dispatcher.getHandlerForProcedure(procedure);
+        final ProcedureHandler handler = dispatcher.getHandler(procedure);
 
         // ASSERT
         assertNotNull(handler, MSG_ON_NULL_HANDLER);
@@ -67,7 +68,7 @@ class ProcedureDispatcherTest
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(ProcedureType.CLEAN)
                 .build();
 
-        final ProcedureHandler handler = dispatcher.getHandlerForProcedure(procedure);
+        final ProcedureHandler handler = dispatcher.getHandler(procedure);
 
         // ASSERT
         assertNotNull(handler, MSG_ON_NULL_HANDLER);
@@ -84,7 +85,7 @@ class ProcedureDispatcherTest
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(ProcedureType.ZIP)
                 .build();
 
-        final ProcedureHandler handler = dispatcher.getHandlerForProcedure(procedure);
+        final ProcedureHandler handler = dispatcher.getHandler(procedure);
 
         // ASSERT
         assertNotNull(handler, MSG_ON_NULL_HANDLER);
@@ -101,7 +102,7 @@ class ProcedureDispatcherTest
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(ProcedureType.UNZIP)
                 .build();
 
-        final ProcedureHandler handler = dispatcher.getHandlerForProcedure(procedure);
+        final ProcedureHandler handler = dispatcher.getHandler(procedure);
 
         // ASSERT
         assertNotNull(handler, MSG_ON_NULL_HANDLER);
@@ -118,7 +119,7 @@ class ProcedureDispatcherTest
         final Procedure procedure = new Procedure.Builder().withId(TEST_PROCEDURE_ID).withName(TEST_PROCEDURE_NAME).withType(ProcedureType.RENAME)
                 .build();
 
-        final ProcedureHandler handler = dispatcher.getHandlerForProcedure(procedure);
+        final ProcedureHandler handler = dispatcher.getHandler(procedure);
 
         // ASSERT
         assertNotNull(handler, MSG_ON_NULL_HANDLER);
