@@ -11,17 +11,6 @@ import model.procedure.ProcedureType;
  */
 public final class RenameProcedureHandler implements ProcedureHandler
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void validate(final Procedure procedure) throws ProcedureHandlerException
-    {
-
-    }
-
-
     /**
      * {@inheritDoc}
      */

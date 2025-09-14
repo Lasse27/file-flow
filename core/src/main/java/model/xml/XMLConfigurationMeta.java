@@ -1,11 +1,13 @@
 package model.xml;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
  * Represents metadata information for an XML configuration.
  */
 @Data
+@Builder
 public class XMLConfigurationMeta
 {
     private final String name;
