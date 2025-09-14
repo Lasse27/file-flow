@@ -1,4 +1,5 @@
 import control.procedure.ProcedureDispatcher;
+import listener.ConsoleListener;
 import model.procedure.Procedure;
 import model.procedure.ProcedureOption;
 import model.procedure.ProcedureOptionType;
@@ -51,6 +52,7 @@ public final class CLIMain
                 .build();
 
         final ProcedureDispatcher dispatcher = new ProcedureDispatcher();
+        dispatcher.register(new ConsoleListener());
         dispatcher.dispatch(procedure);
     }
 }

@@ -6,8 +6,12 @@ import exception.ProcedureDispatcherException;
 import exception.ProcedureHandlerException;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import model.listener.Listener;
+import model.listener.ListenerCollection;
+import model.listener.ListenerEvent;
 import model.procedure.Procedure;
 import model.procedure.ProcedureType;
+import model.shared.Registrable;
 import utility.Contracts;
 
 import java.util.Map;
@@ -20,8 +24,10 @@ import java.util.function.Supplier;
  */
 @ToString
 @NoArgsConstructor
-public class ProcedureDispatcher
+public class ProcedureDispatcher implements Registrable<Listener>
 {
+
+    private final ListenerCollection listeners = ListenerCollection.builder().build();
 
     /**
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
@@ -95,7 +101,17 @@ public class ProcedureDispatcher
 
         try
         {
+            this.listeners.onStart(ListenerEvent.builder()
+                    .taskId(procedure.getId())
+                    .message(String.format("Executing procedure: %s", procedure.getName()))
+                    .build());
+
             handler.handle(procedure);
+
+            this.listeners.onEnd(ListenerEvent.builder()
+                    .taskId(procedure.getId())
+                    .message(String.format("Procedure %s execution finished.", procedure.getName()))
+                    .build());
         }
         catch (final ProcedureHandlerException exception)
         {
@@ -104,5 +120,19 @@ public class ProcedureDispatcher
                     exception
             );
         }
+    }
+
+
+    @Override
+    public void register(final Listener listener)
+    {
+        this.listeners.register(listener);
+    }
+
+
+    @Override
+    public void unregister(final Listener listener)
+    {
+        this.listeners.unregister(listener);
     }
 }

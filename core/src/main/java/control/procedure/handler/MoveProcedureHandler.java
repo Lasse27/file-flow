@@ -2,11 +2,13 @@ package control.procedure.handler;
 
 
 import control.procedure.executor.MoveProcedureExecutor;
+import control.procedure.executor.ProcedureExecutor;
 import exception.ProcedureHandlerException;
 import model.procedure.Procedure;
 import model.procedure.ProcedureOption;
 import model.procedure.ProcedureOptionType;
 import model.procedure.ProcedureType;
+import model.procedure.params.MoveProcedureParams;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -94,14 +96,13 @@ public final class MoveProcedureHandler implements ProcedureHandler
         final Path targetPath = Path.of(getOption(options, ProcedureOptionType.TARGET).getValue());
         final List<Pattern> includes = getPatterns(options, ProcedureOptionType.INCLUDE);
         final List<Pattern> excludes = getPatterns(options, ProcedureOptionType.EXCLUDE);
-
-        final MoveProcedureExecutor moveProcedureExecutor = new MoveProcedureExecutor.Builder()
-                .withSourcePath(sourcePath)
-                .withTargetPath(targetPath)
-                .withIncludes(includes)
-                .withExcludes(excludes)
+        final MoveProcedureParams params = MoveProcedureParams.builder()
+                .sourcePath(sourcePath)
+                .targetPath(targetPath)
                 .build();
 
+        // Run respective executor
+        final ProcedureExecutor moveProcedureExecutor = new MoveProcedureExecutor(params);
         moveProcedureExecutor.execute();
     }
 }
