@@ -107,6 +107,8 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
                     .build());
 
             //noinspection unchecked
+            handler.register(this.listeners);
+            //noinspection unchecked
             handler.handle(procedure);
 
             this.listeners.onEnd(ListenerEvent.builder()

@@ -12,6 +12,7 @@ import model.file.FileMoveRule;
 import model.file.FileMoveStrategy;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
+import model.listener.ListenerEvent;
 import model.procedure.types.MoveProcedure;
 import model.shared.Registrable;
 
@@ -65,35 +66,60 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
      */
     private List<Path> discover(final MoveProcedure procedure) throws FileDiscoverException
     {
-        // Map to local vars
+        this.listeners.onStart(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Discovering files for procedure: %s", procedure.getName()))
+                .build());
+
         final FileDiscoverStrategy strategy = procedure.getDiscoverStrategy();
         final Path sourcePath = procedure.getSourcePath();
+        final List<Path> discovered = strategy.discover(sourcePath);
 
-        // Run strategy -> throws on fail
-        return strategy.discover(sourcePath);
+        this.listeners.onEnd(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Discovering files finished. %s files found.", discovered.size()))
+                .build());
+        return discovered;
     }
 
 
     private List<Path> filter(final Collection<Path> paths, final MoveProcedure procedure)
     {
-        // Map to local vars
-        final FileFilterStrategy strategy = procedure.getFilterStrategy();
+        this.listeners.onStart(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Filtering files for procedure: %s", procedure.getName()))
+                .build());
 
-        // Run filter
-        return paths.stream()
+        final FileFilterStrategy strategy = procedure.getFilterStrategy();
+        final List<Path> filtered = paths.stream()
                 .filter(strategy::accept)
                 .toList();
+
+        this.listeners.onEnd(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Filtering files finished. %s files remaining.", filtered.size()))
+                .build());
+
+        return filtered;
     }
 
 
     private Map<Path, Path> move(final List<Path> filteredFiles, final MoveProcedure procedure)
     {
-        // Map to local vars
+        this.listeners.onStart(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Moving files procedure: %s", procedure.getName()))
+                .build());
+
         final FileMoveStrategy strategy = procedure.getFileMoveStrategy();
         final Path targetPath = procedure.getTargetPath();
+        final Map<Path, Path> conflicts = strategy.move(filteredFiles, targetPath, FileMoveRule.KEEP_ATTRIBUTES);
 
-        // Run move
-        return strategy.move(filteredFiles, targetPath, FileMoveRule.KEEP_ATTRIBUTES);
+        this.listeners.onEnd(ListenerEvent.builder()
+                .taskId(procedure.getId())
+                .message(String.format("Files moved. %s conflicts occurred.", conflicts.size()))
+                .build());
+        return conflicts;
     }
 
 

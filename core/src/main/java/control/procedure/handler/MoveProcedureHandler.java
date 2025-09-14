@@ -38,7 +38,7 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
      * @see MoveProcedureExecutor
      * @see ProcedureExecutor
      */
-    private final ProcedureExecutor<MoveProcedure> moveProcedureExecutor = new MoveProcedureExecutor();
+    private final ProcedureExecutor<MoveProcedure> executor = new MoveProcedureExecutor();
 
 
     /**
@@ -48,13 +48,21 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
     public void handle(final MoveProcedure procedure)
     {
         this.listeners.onStart(
-                ListenerEvent.builder().taskId(procedure.getId()).message(String.format("Handling move procedure: %s", procedure.getName())).build());
+                ListenerEvent.builder()
+                        .taskId(procedure.getId())
+                        .message(String.format("Handling move procedure: %s", procedure.getName()))
+                        .build());
 
+        this.validator.register(this.listeners);
         this.validator.validate(procedure);
-        this.moveProcedureExecutor.execute(procedure);
+        this.executor.register(this.listeners);
+        this.executor.execute(procedure);
 
         this.listeners.onEnd(
-                ListenerEvent.builder().taskId(procedure.getId()).message(String.format("Move procedure %s handled.", procedure.getName())).build());
+                ListenerEvent.builder()
+                        .taskId(procedure.getId())
+                        .message(String.format("Move procedure %s handled.", procedure.getName()))
+                        .build());
     }
 
 
