@@ -49,7 +49,6 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
     {
         this.listeners.onStart(
                 ListenerEvent.builder()
-                        .taskId(procedure.getId())
                         .message(String.format("Handling move procedure: %s", procedure.getName()))
                         .build());
 
@@ -60,7 +59,6 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
 
         this.listeners.onEnd(
                 ListenerEvent.builder()
-                        .taskId(procedure.getId())
                         .message(String.format("Move procedure %s handled.", procedure.getName()))
                         .build());
     }

@@ -13,8 +13,6 @@ import java.time.Instant;
 @SuperBuilder
 public class ListenerEvent
 {
-    private final String taskId;
-
     private final String message;
 
     private final Instant timestamp = Instant.now();

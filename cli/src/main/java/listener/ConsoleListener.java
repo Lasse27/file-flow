@@ -11,6 +11,17 @@ import java.util.Locale;
 public class ConsoleListener implements Listener
 {
 
+    public static final String RESET = "\u001B[0m";
+
+    public static final String RED = "\u001B[31m";
+
+    public static final String GREEN = "\u001B[32m";
+
+    public static final String YELLOW = "\u001B[33m";
+
+    public static final String BLUE = "\u001B[34m";
+
+
     @SuppressWarnings("SimpleDateFormatWithoutLocale")
     private static final DateTimeFormatter formatter = DateTimeFormatter
             .ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
@@ -25,7 +36,7 @@ public class ConsoleListener implements Listener
     public void onStart(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s - %s: %s%n", timestamp, event.getTaskId(), event.getMessage());
+        System.out.printf("%s %s - %s%s%n", GREEN, timestamp, event.getMessage(), RESET);
     }
 
 
@@ -36,7 +47,7 @@ public class ConsoleListener implements Listener
     public void onProgress(final ProgressEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s - %s: + %s - %s%n", timestamp, event.getTaskId(), event.getProgress(), event.getMessage());
+        System.out.printf("%s %s | %s - %s%s%n", BLUE, timestamp, event.getProgress(), event.getMessage(), RESET);
     }
 
 
@@ -47,7 +58,7 @@ public class ConsoleListener implements Listener
     public void onCancel(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s - %s: %s%n", timestamp, event.getTaskId(), event.getMessage());
+        System.out.printf("%s %s - %s%s%n", YELLOW, timestamp, event.getMessage(), RESET);
     }
 
 
@@ -58,6 +69,6 @@ public class ConsoleListener implements Listener
     public void onEnd(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s - %s: %s%n", timestamp, event.getTaskId(), event.getMessage());
+        System.out.printf("%s %s - %s%s%n", GREEN, timestamp, event.getMessage(), RESET);
     }
 }

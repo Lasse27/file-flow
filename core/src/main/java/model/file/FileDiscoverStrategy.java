@@ -1,6 +1,7 @@
 package model.file;
 
 import exception.FileDiscoverException;
+import model.listener.Listener;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -13,11 +14,16 @@ import java.util.List;
 public interface FileDiscoverStrategy
 {
     /**
-     * Discovers and retrieves a list of file paths from the specified source path.
+     * Discovers file paths from the specified source path and notifies a listener about the discovery process.
      *
-     * @param sourcePath the root path from which file discovery will begin. This path must not be null and should point to a valid location.
-     * @return a list of {@link Path} objects representing the discovered files.
-     * @throws FileDiscoverException if an error occurs during file discovery, such as inaccessible directories or invalid paths.
+     * @param sourcePath the path to the source directory or file from which file paths need to be discovered.
+     *                   Must not be null and must refer to a valid file system location.
+     * @param listener   the listener to monitor and handle events during the discovery process.
+     *                   It provides callbacks for start, progress, cancellation, and end of the process.
+     * @return a list of {@code Path} objects representing the discovered file paths.
+     * Returns an empty list if no files were discovered.
+     * @throws FileDiscoverException if an error occurs during the discovery process, such as an invalid source path
+     *                               or lack of necessary permissions.
      */
-    List<Path> discover(Path sourcePath) throws FileDiscoverException;
+    List<Path> discover(final Path sourcePath, final Listener listener) throws FileDiscoverException;
 }

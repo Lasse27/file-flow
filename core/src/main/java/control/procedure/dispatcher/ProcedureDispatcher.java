@@ -102,7 +102,6 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
         try
         {
             this.listeners.onStart(ListenerEvent.builder()
-                    .taskId(procedure.getId())
                     .message(String.format("Executing procedure: %s", procedure.getName()))
                     .build());
 
@@ -112,7 +111,6 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
             handler.handle(procedure);
 
             this.listeners.onEnd(ListenerEvent.builder()
-                    .taskId(procedure.getId())
                     .message(String.format("Procedure %s execution finished.", procedure.getName()))
                     .build());
         }

@@ -28,7 +28,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, Registrable<Listener>
+public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
 {
     /**
      * A collection of {@link Listener} objects associated with the {@code MoveProcedureExecutor}. This field manages
@@ -67,16 +67,14 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
     private List<Path> discover(final MoveProcedure procedure) throws FileDiscoverException
     {
         this.listeners.onStart(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Discovering files for procedure: %s", procedure.getName()))
                 .build());
 
         final FileDiscoverStrategy strategy = procedure.getDiscoverStrategy();
         final Path sourcePath = procedure.getSourcePath();
-        final List<Path> discovered = strategy.discover(sourcePath);
+        final List<Path> discovered = strategy.discover(sourcePath, this.listeners);
 
         this.listeners.onEnd(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Discovering files finished. %s files found.", discovered.size()))
                 .build());
         return discovered;
@@ -86,7 +84,6 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
     private List<Path> filter(final Collection<Path> paths, final MoveProcedure procedure)
     {
         this.listeners.onStart(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Filtering files for procedure: %s", procedure.getName()))
                 .build());
 
@@ -96,7 +93,6 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
                 .toList();
 
         this.listeners.onEnd(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Filtering files finished. %s files remaining.", filtered.size()))
                 .build());
 
@@ -107,7 +103,6 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
     private Map<Path, Path> move(final List<Path> filteredFiles, final MoveProcedure procedure)
     {
         this.listeners.onStart(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Moving files procedure: %s", procedure.getName()))
                 .build());
 
@@ -116,7 +111,6 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
         final Map<Path, Path> conflicts = strategy.move(filteredFiles, targetPath, FileMoveRule.KEEP_ATTRIBUTES);
 
         this.listeners.onEnd(ListenerEvent.builder()
-                .taskId(procedure.getId())
                 .message(String.format("Files moved. %s conflicts occurred.", conflicts.size()))
                 .build());
         return conflicts;
