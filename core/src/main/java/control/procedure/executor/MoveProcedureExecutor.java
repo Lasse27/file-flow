@@ -36,7 +36,7 @@ public class MoveProcedureExecutor implements ProcedureExecutor
      * {@inheritDoc}
      */
     @Override
-    public ExecutionResult execute()
+    public void execute()
     {
         Contracts.notNull(this.params, () -> new FileMoverException("Params were null."));
         try
@@ -44,11 +44,10 @@ public class MoveProcedureExecutor implements ProcedureExecutor
             final List<Path> discoveredFiles = this.discover();
             final List<Path> filteredFiles = this.filter(discoveredFiles);
             final Map<Path, Path> conflicts = this.move(filteredFiles);
-            return ExecutionResult.ok();
         }
         catch (final Exception exception)
         {
-            return ExecutionResult.fail(null);
+            throw new FileMoverException("An error occurred while executing the move procedure.", exception);
         }
     }
 

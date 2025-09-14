@@ -15,5 +15,5 @@ public interface ProcedureExecutor
      * @return an {@code ExecutionResult} representing the outcome of the execution, including whether it was successful
      * and any associated exception information in case of failure.
      */
-    public ExecutionResult execute();
+    public void execute();
 }
