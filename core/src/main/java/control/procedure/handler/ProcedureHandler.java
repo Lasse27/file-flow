@@ -12,6 +12,7 @@ import model.shared.Registrable;
  * <br> <br>
  * Implementations of this interface are responsible for providing specific logic to process and validate procedures based on their type and provided attributes.
  *
+ * @param <T> type of procedure
  * @see Procedure
  * @see ProcedureHandlerException
  */

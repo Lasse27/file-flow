@@ -29,6 +29,10 @@ import java.util.Map;
 @AllArgsConstructor
 public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, Registrable<Listener>
 {
+    /**
+     * A collection of {@link Listener} objects associated with the {@code MoveProcedureExecutor}. This field manages
+     * the registration and notification of {@link Listener} objects for lifecycle events of the file-moving procedure.
+     */
     @Builder.Default
     private final ListenerCollection listeners = ListenerCollection.builder().build();
 
@@ -96,13 +100,13 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, 
     @Override
     public void register(final Listener listener)
     {
-
+        this.listeners.register(listener);
     }
 
 
     @Override
     public void unregister(final Listener listener)
     {
-
+        this.listeners.unregister(listener);
     }
 }
