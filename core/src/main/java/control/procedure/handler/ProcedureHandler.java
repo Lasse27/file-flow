@@ -2,7 +2,10 @@ package control.procedure.handler;
 
 
 import exception.ProcedureHandlerException;
+import model.listener.Listener;
+import model.listener.ListenerEvent;
 import model.procedure.Procedure;
+import model.shared.Registrable;
 
 
 /**
@@ -13,8 +16,7 @@ import model.procedure.Procedure;
  * @see Procedure
  * @see ProcedureHandlerException
  */
-@FunctionalInterface
-public interface ProcedureHandler<T extends Procedure>
+public interface ProcedureHandler<T extends Procedure> extends Registrable<Listener>
 {
     /**
      * Executes the handling of a procedure. The specific implementation details are determined by the classes implementing this method. This method serves as the entry point

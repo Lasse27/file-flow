@@ -5,11 +5,15 @@ import exception.FileMoverException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import model.file.FileDiscoverStrategy;
 import model.file.FileFilterStrategy;
 import model.file.FileMoveRule;
 import model.file.FileMoveStrategy;
+import model.listener.Listener;
+import model.listener.ListenerCollection;
 import model.procedure.types.MoveProcedure;
+import model.shared.Registrable;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -21,9 +25,14 @@ import java.util.Map;
  */
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
+public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>, Registrable<Listener>
 {
+    @Builder.Default
+    private final ListenerCollection listeners = ListenerCollection.builder().build();
+
+
     /**
      * {@inheritDoc}
      */
@@ -81,5 +90,19 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
 
         // Run move
         return strategy.move(filteredFiles, targetPath, FileMoveRule.KEEP_ATTRIBUTES);
+    }
+
+
+    @Override
+    public void register(final Listener listener)
+    {
+
+    }
+
+
+    @Override
+    public void unregister(final Listener listener)
+    {
+
     }
 }

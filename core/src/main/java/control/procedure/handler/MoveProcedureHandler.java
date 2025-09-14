@@ -5,6 +5,9 @@ import control.procedure.executor.MoveProcedureExecutor;
 import control.procedure.executor.ProcedureExecutor;
 import control.procedure.validator.MoveProcedureValidator;
 import control.procedure.validator.ProcedureValidator;
+import model.listener.Listener;
+import model.listener.ListenerCollection;
+import model.listener.ListenerEvent;
 import model.procedure.ProcedureType;
 import model.procedure.types.MoveProcedure;
 
@@ -14,6 +17,8 @@ import model.procedure.types.MoveProcedure;
  */
 public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedure>
 {
+
+    private final ListenerCollection listeners = ListenerCollection.builder().build();
 
     /**
      * A validator responsible for ensuring that {@link MoveProcedure} instances are properly constructed
@@ -42,7 +47,33 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
     @Override
     public void handle(final MoveProcedure procedure)
     {
+        this.listeners.onStart(
+                ListenerEvent.builder().taskId(procedure.getId()).message(String.format("Handling move procedure: %s", procedure.getName())).build());
+
         this.validator.validate(procedure);
         this.moveProcedureExecutor.execute(procedure);
+
+        this.listeners.onEnd(
+                ListenerEvent.builder().taskId(procedure.getId()).message(String.format("Move procedure %s handled.", procedure.getName())).build());
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void register(final Listener listener)
+    {
+        this.listeners.register(listener);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unregister(final Listener listener)
+    {
+        this.listeners.unregister(listener);
     }
 }
