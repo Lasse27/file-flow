@@ -1,12 +1,12 @@
 import control.procedure.ProcedureDispatcher;
 import listener.ConsoleListener;
+import model.file.FlatDiscoverStrategy;
+import model.file.FlatMoveStrategy;
+import model.file.PatternFilterStrategy;
 import model.procedure.Procedure;
-import model.procedure.ProcedureOption;
-import model.procedure.ProcedureOptionType;
-import model.procedure.ProcedureType;
+import model.procedure.types.MoveProcedure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Path;
 
 
 /**
@@ -30,25 +30,14 @@ public final class CLIMain
      */
     public static void main(final String[] args)
     {
-        final ProcedureOption sourceOption = ProcedureOption.builder()
-                .type(ProcedureOptionType.SOURCE)
-                .value("C:/Users/Lasse/Desktop/source")
-                .build();
-
-        final ProcedureOption targetOption = ProcedureOption.builder()
-                .type(ProcedureOptionType.TARGET)
-                .value("C:/Users/Lasse/Desktop/target")
-                .build();
-
-        final List<ProcedureOption> options = new ArrayList<>();
-        options.add(sourceOption);
-        options.add(targetOption);
-
-        final Procedure procedure = Procedure.builder()
+        final Procedure procedure = MoveProcedure.builder()
                 .name("Test")
                 .id("Test-1")
-                .type(ProcedureType.MOVE)
-                .options(options)
+                .sourcePath(Path.of("C:/Users/Lasse/Desktop/source"))
+                .targetPath(Path.of("C:/Users/Lasse/Desktop/target"))
+                .discoverStrategy(new FlatDiscoverStrategy())
+                .filterStrategy(new PatternFilterStrategy())
+                .fileMoveStrategy(new FlatMoveStrategy())
                 .build();
 
         final ProcedureDispatcher dispatcher = new ProcedureDispatcher();

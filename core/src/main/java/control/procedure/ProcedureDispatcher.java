@@ -32,7 +32,7 @@ public class ProcedureDispatcher implements Registrable<Listener>
     /**
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
      */
-    private static final Map<ProcedureType, Supplier<ProcedureHandler>> handlers = Map.of(
+    private static final Map<ProcedureType, Supplier<ProcedureHandler<? extends Procedure>>> handlers = Map.of(
             ProcedureType.MOVE, MoveProcedureHandler::new,
             ProcedureType.CLEAN, CleanProcedureHandler::new,
             ProcedureType.COPY, CopyProcedureHandler::new,

@@ -9,8 +9,7 @@ import model.file.FileDiscoverStrategy;
 import model.file.FileFilterStrategy;
 import model.file.FileMoveRule;
 import model.file.FileMoveStrategy;
-import model.procedure.params.MoveProcedureParams;
-import utility.Contracts;
+import model.procedure.types.MoveProcedure;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -23,27 +22,19 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-public class MoveProcedureExecutor implements ProcedureExecutor
+public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
 {
-
-    /**
-     * Stores the parameters required for executing a file move operation.
-     */
-    private final MoveProcedureParams params;
-
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public void execute()
+    public void execute(final MoveProcedure procedure)
     {
-        Contracts.notNull(this.params, () -> new FileMoverException("Params were null."));
         try
         {
-            final List<Path> discoveredFiles = this.discover();
-            final List<Path> filteredFiles = this.filter(discoveredFiles);
-            final Map<Path, Path> conflicts = this.move(filteredFiles);
+            final List<Path> discoveredFiles = this.discover(procedure);
+            final List<Path> filteredFiles = this.filter(discoveredFiles, procedure);
+            final Map<Path, Path> conflicts = this.move(filteredFiles, procedure);
         }
         catch (final Exception exception)
         {
@@ -59,21 +50,21 @@ public class MoveProcedureExecutor implements ProcedureExecutor
      * @return a list of {@code Path} objects representing the discovered files.
      * @throws FileMoverException if the discovery process fails due to a {@code FileDiscoverException}.
      */
-    private List<Path> discover() throws FileDiscoverException
+    private List<Path> discover(final MoveProcedure procedure) throws FileDiscoverException
     {
         // Map to local vars
-        final FileDiscoverStrategy strategy = this.params.getDiscoverStrategy();
-        final Path sourcePath = this.params.getSourcePath();
+        final FileDiscoverStrategy strategy = procedure.getDiscoverStrategy();
+        final Path sourcePath = procedure.getSourcePath();
 
         // Run strategy -> throws on fail
         return strategy.discover(sourcePath);
     }
 
 
-    private List<Path> filter(final Collection<Path> paths)
+    private List<Path> filter(final Collection<Path> paths, final MoveProcedure procedure)
     {
         // Map to local vars
-        final FileFilterStrategy strategy = this.params.getFilterStrategy();
+        final FileFilterStrategy strategy = procedure.getFilterStrategy();
 
         // Run filter
         return paths.stream()
@@ -82,11 +73,11 @@ public class MoveProcedureExecutor implements ProcedureExecutor
     }
 
 
-    private Map<Path, Path> move(final List<Path> filteredFiles)
+    private Map<Path, Path> move(final List<Path> filteredFiles, final MoveProcedure procedure)
     {
         // Map to local vars
-        final FileMoveStrategy strategy = this.params.getFileMoveStrategy();
-        final Path targetPath = this.params.getTargetPath();
+        final FileMoveStrategy strategy = procedure.getFileMoveStrategy();
+        final Path targetPath = procedure.getTargetPath();
 
         // Run move
         return strategy.move(filteredFiles, targetPath, FileMoveRule.KEEP_ATTRIBUTES);

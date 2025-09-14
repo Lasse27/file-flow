@@ -3,14 +3,15 @@ package model.procedure;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
-import java.util.List;
 
-
-/** Represents a procedure as part of a configuration or workflow. */
+/**
+ * Represents a procedure as part of a configuration or workflow.
+ * */
 @Data
-@Builder
-public class Procedure
+@SuperBuilder
+public abstract class Procedure
 {
     /**
      * A unique identifier for the procedure, used to distinguish it from other procedures.
@@ -25,13 +26,7 @@ public class Procedure
 
 
     /**
-     * Specifies the type of the procedure represented by this instance.
+     * Default protected constructor for the Procedure class.
      */
-    private ProcedureType type;
-
-
-    /**
-     * Contains a list of {@link ProcedureOption} objects defining specific procedure configurations and params.
-     */
-    private List<ProcedureOption> options;
+    protected Procedure() {}
 }

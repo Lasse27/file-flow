@@ -1,19 +1,20 @@
 package control.procedure.executor;
 
+import model.procedure.Procedure;
+
 /**
- * Represents a functional interface for executing a procedure and getting the result of the execution.
- * The {@code ProcedureExecutor} interface serves as a contract for executing operations that return
- * an {@code ExecutionResult}, which encapsulates the success status and potential exception details.
+ * Represents a functional interface for executing procedures that extend the {@link Procedure} class.
+ * Implementations of this interface provide specific execution logic based on the procedure type.
+ *
+ * @param <T> the type of {@link Procedure} to be executed. Must be a subclass of {@link Procedure}.
  */
 @FunctionalInterface
-public interface ProcedureExecutor
+public interface ProcedureExecutor<T extends Procedure>
 {
     /**
-     * Executes a procedure and returns the result of the execution. The result encapsulates the success status
-     * and any exception details if applicable.
+     * Executes the specified procedure.
      *
-     * @return an {@code ExecutionResult} representing the outcome of the execution, including whether it was successful
-     * and any associated exception information in case of failure.
+     * @param procedure the procedure to be executed, must be a non-null instance of a class extending {@link Procedure}.
      */
-    public void execute();
+    public void execute(T procedure);
 }
