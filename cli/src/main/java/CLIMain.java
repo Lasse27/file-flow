@@ -3,6 +3,7 @@ import listener.ConsoleListener;
 import model.file.FlatDiscoverStrategy;
 import model.file.FlatMoveStrategy;
 import model.file.PatternFilterStrategy;
+import model.file.conflict.RenameConflictStrategy;
 import model.procedure.Procedure;
 import model.procedure.types.MoveProcedure;
 
@@ -38,6 +39,7 @@ public final class CLIMain
                 .discoverStrategy(new FlatDiscoverStrategy())
                 .filterStrategy(new PatternFilterStrategy())
                 .fileMoveStrategy(new FlatMoveStrategy())
+                .fileConflictStrategy(new RenameConflictStrategy())
                 .build();
 
         final ProcedureDispatcher dispatcher = new ProcedureDispatcher();

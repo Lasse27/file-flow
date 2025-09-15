@@ -3,6 +3,7 @@ package model.procedure.types;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import model.file.conflict.FileConflictStrategy;
 import model.file.FileDiscoverStrategy;
 import model.file.FileFilterStrategy;
 import model.file.FileMoveStrategy;
@@ -27,4 +28,6 @@ public final class MoveProcedure extends Procedure
     private FileFilterStrategy filterStrategy;
 
     private FileMoveStrategy fileMoveStrategy;
+
+    private FileConflictStrategy fileConflictStrategy;
 }

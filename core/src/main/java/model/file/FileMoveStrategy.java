@@ -1,8 +1,8 @@
 package model.file;
 
+import model.file.conflict.FileAction;
+
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a strategy for moving a collection of files to a specified target directory.
@@ -12,15 +12,15 @@ import java.util.Map;
 public interface FileMoveStrategy
 {
     /**
-     * Moves a list of files to a specified target directory, applying optional file move configurations.
+     * Moves a file from the specified source path to the target path, optionally restoring file
+     * attributes such as permissions, ownership, and modification time based on the implementation.
+     * If an error occurs during the move operation, it returns an unresolved file action.
      *
-     * @param sourceFiles     a list of file paths to be moved; must not be null or empty.
-     *                        Each path should point to an existing source file.
-     * @param targetDirectory the destination directory where the files will be moved; must not be null and should exist.
-     * @param rules           optional configurations that control the behavior of the move operation, such as handling
-     *                        duplicate files or other specific rules.
-     * @return a map of {@code Path} objects representing the new locations of the moved files.
-     * Returns an empty list if no files were moved successfully.
+     * @param sourceFile the path of the source file to be moved; must not be null and should point to an existing file.
+     * @param targetFile the path of the target file where the source file is to be moved; must not be null.
+     * @return a {@code FileAction} representing the result of the operation:
+     * - {@code RESOLVED} if the file was successfully moved.
+     * - {@code UNRESOLVED} if the move operation failed.
      */
-    Map<Path, Path> move(final List<Path> sourceFiles, final Path targetDirectory, FileMoveRule... rules);
+    FileAction move(final Path sourceFile, final Path targetFile);
 }

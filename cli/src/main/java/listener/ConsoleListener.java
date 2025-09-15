@@ -47,7 +47,7 @@ public class ConsoleListener implements Listener
     public void onProgress(final ProgressEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s %s | %s - %s%s%n", BLUE, timestamp, event.getProgress(), event.getMessage(), RESET);
+        System.out.printf("%s %s - | %s - %s%s%n", BLUE, timestamp, event.getProgress(), event.getMessage(), RESET);
     }
 
 

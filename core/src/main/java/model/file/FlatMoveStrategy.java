@@ -1,12 +1,16 @@
 package model.file;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import model.file.conflict.FileAction;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +18,16 @@ import java.util.Map;
  * A concrete implementation of {@link FileMoveStrategy} that provides functionality
  * to move files into a flat structure at the target directory.
  */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlatMoveStrategy implements FileMoveStrategy
 {
+    @Builder.Default
+    private boolean restoreAttributes = true;
+
+
     private static PosixFileAttributes readPosixFileAttributes(final Path sourcePath) throws IOException
     {
         PosixFileAttributes posixAttrs = null;
@@ -47,28 +59,24 @@ public class FlatMoveStrategy implements FileMoveStrategy
      * {@inheritDoc}
      */
     @Override
-    public Map<Path, Path> move(final List<Path> sourceFiles, final Path targetDirectory, final FileMoveRule... rules)
+    public FileAction move(final Path sourceFile, final Path targetFile)
     {
-        final Map<Path, Path> conflicts = new HashMap<>();
-        for (final Path sourcePath : sourceFiles)
+        try
         {
-            final Path targetPath = Path.of(targetDirectory.toString(), sourcePath.getFileName().toString());
-            try
+            final BasicFileAttributes attributes = Files.readAttributes(sourceFile, BasicFileAttributes.class);
+            final PosixFileAttributes posixAttrs = readPosixFileAttributes(sourceFile);
+            Files.move(sourceFile, targetFile);
+            if (this.restoreAttributes)
             {
-                final BasicFileAttributes attributes = Files.readAttributes(sourcePath, BasicFileAttributes.class);
-                final PosixFileAttributes posixAttrs = readPosixFileAttributes(sourcePath);
-                Files.move(sourcePath, targetPath);
-                if (Arrays.stream(rules).anyMatch(rule -> rule == FileMoveRule.KEEP_ATTRIBUTES))
-                {
-                    restoreFileAttributes(targetPath, attributes, posixAttrs);
-                }
-            }
-            catch (final IOException exception)
-            {
-                conflicts.put(sourcePath, targetPath);
+                restoreFileAttributes(targetFile, attributes, posixAttrs);
             }
         }
-        return conflicts;
+        catch (final IOException exception)
+        {
+            return FileAction.UNRESOLVED(sourceFile, targetFile);
+        }
+
+        return FileAction.RESOLVED(sourceFile, targetFile);
     }
 }
 
