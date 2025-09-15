@@ -1,7 +1,8 @@
 import control.procedure.dispatcher.ProcedureDispatcher;
 import listener.ConsoleListener;
-import model.file.FlatDiscoverStrategy;
-import model.file.FlatMoveStrategy;
+import model.file.discover.FlatDiscoverStrategy;
+import model.file.discover.RecursiveDiscoverStrategy;
+import model.file.move.FlatMoveStrategy;
 import model.file.PatternFilterStrategy;
 import model.file.conflict.RenameConflictStrategy;
 import model.procedure.Procedure;
@@ -34,9 +35,9 @@ public final class CLIMain
         final Procedure procedure = MoveProcedure.builder()
                 .name("Test")
                 .id("Test-1")
-                .sourcePath(Path.of("C:/Users/Lasse/Desktop/source"))
-                .targetPath(Path.of("C:/Users/Lasse/Desktop/target"))
-                .discoverStrategy(new FlatDiscoverStrategy())
+                .sourcePath(Path.of("C:/Users/Lasse/Desktop/source/"))
+                .targetPath(Path.of("C:/Users/Lasse/Desktop/target/"))
+                .discoverStrategy(new RecursiveDiscoverStrategy())
                 .filterStrategy(new PatternFilterStrategy())
                 .fileMoveStrategy(new FlatMoveStrategy())
                 .fileConflictStrategy(new RenameConflictStrategy())

@@ -1,4 +1,4 @@
-package model.file;
+package model.file.discover;
 
 import exception.FileDiscoverException;
 import model.listener.Listener;

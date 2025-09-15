@@ -1,4 +1,4 @@
-package model.file;
+package model.file.move;
 
 import model.file.conflict.FileAction;
 

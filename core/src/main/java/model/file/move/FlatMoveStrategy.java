@@ -1,4 +1,4 @@
-package model.file;
+package model.file.move;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A concrete implementation of {@link FileMoveStrategy} that provides functionality

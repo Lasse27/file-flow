@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import model.file.conflict.FileConflictStrategy;
-import model.file.FileDiscoverStrategy;
+import model.file.discover.FileDiscoverStrategy;
 import model.file.FileFilterStrategy;
-import model.file.FileMoveStrategy;
+import model.file.move.FileMoveStrategy;
 import model.procedure.Procedure;
 
 import java.nio.file.Path;
