@@ -57,24 +57,30 @@ public class FlatMoveStrategy implements FileMoveStrategy
      * {@inheritDoc}
      */
     @Override
-    public FileAction move(final Path sourceFile, final Path targetFile)
+    public FileAction move(final Path sourceFile, final Path targetDirectory)
     {
         try
         {
+            // Get the target path of the file by combining the filename with the target directory
+            final Path targetPath = Path.of(targetDirectory.toString(), sourceFile.getFileName().toString());
+
+            // get attrs
             final BasicFileAttributes attributes = Files.readAttributes(sourceFile, BasicFileAttributes.class);
             final PosixFileAttributes posixAttrs = readPosixFileAttributes(sourceFile);
-            Files.move(sourceFile, targetFile);
+
+            // move file
+            Files.move(sourceFile, targetDirectory);
             if (this.restoreAttributes)
             {
-                restoreFileAttributes(targetFile, attributes, posixAttrs);
+                restoreFileAttributes(targetDirectory, attributes, posixAttrs);
             }
         }
         catch (final IOException exception)
         {
-            return FileAction.UNRESOLVED(sourceFile, targetFile);
+            return FileAction.UNRESOLVED(sourceFile, targetDirectory);
         }
 
-        return FileAction.RESOLVED(sourceFile, targetFile);
+        return FileAction.RESOLVED(sourceFile, targetDirectory);
     }
 }
 

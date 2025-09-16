@@ -1,7 +1,11 @@
 package model.file.conflict;
 
-import java.nio.file.Path;
-
+/**
+ * A conflict resolution strategy that resolves file conflicts by overwriting the target file
+ * with the source file. This strategy assumes that the source file can safely replace the existing file at the target location.
+ * <br>
+ * This implementation conforms to the {@link FileConflictStrategy} interface.
+ */
 public class OverwriteConflictStrategy implements FileConflictStrategy
 {
     /**

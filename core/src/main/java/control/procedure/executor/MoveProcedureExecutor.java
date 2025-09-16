@@ -143,20 +143,19 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
             final int progress = (int) (((double) i / filteredFiles.size()) * 100);
 
             final Path sourcePath = filteredFiles.get(i);
-            final Path targetPath = Path.of(procedure.getTargetPath().toString(), sourcePath.getFileName().toString());
-            final FileAction fileAction = strategy.move(sourcePath, targetPath);
+            final FileAction fileAction = strategy.move(sourcePath, procedure.getTargetDirectory());
             if (fileAction.resolved())
             {
                 this.listeners.onProgress(ProgressEvent.builder()
                         .progress(progress)
-                        .message(String.format("Moved %s -> %s", sourcePath, targetPath))
+                        .message(String.format("Moved %s -> %s", sourcePath, fileAction.targetFile()))
                         .build());
             }
             else
             {
                 this.listeners.onProgress(ProgressEvent.builder()
                         .progress(progress)
-                        .message(String.format("Conflict %s -> %s.", sourcePath, targetPath))
+                        .message(String.format("Conflict %s -> %s.", sourcePath, fileAction.targetFile()))
                         .build());
                 actions.add(fileAction);
             }

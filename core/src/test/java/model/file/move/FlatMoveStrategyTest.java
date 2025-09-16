@@ -1,0 +1,305 @@
+package model.file.move;
+
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import model.file.conflict.FileAction;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+// TODO:
+//  Success when same file
+//  Move to the same filepath
+//  Move to forbidden path
+//  Move to impossible path
+
+class FlatMoveStrategyTest
+{
+
+    private static void createOneLayerTestingEnvironment(final FileSystem fileSystem, final String source, final String target) throws IOException
+    {
+        final Path sourceDir = fileSystem.getPath(source);
+        Files.createDirectories(sourceDir);
+        assertTrue(Files.isDirectory(sourceDir), "Source directory not created.");
+
+        final Path targetDir = fileSystem.getPath(target);
+        Files.createDirectories(targetDir);
+        assertTrue(Files.isDirectory(targetDir), "Target directory not created.");
+    }
+
+
+    @Test
+    @Order(1)
+    @DisplayName("Move: Target file created - Unix")
+    void move_checkTargetFileCreated_unix() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var2/source.txt");
+
+            // 4. create the source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertTrue(Files.exists(target), "Target file not created.");
+        }
+    }
+
+
+    @Test
+    @Order(1)
+    @DisplayName("Move: Target file created - Windows")
+    void move_checkTargetFileCreated_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var2\\source.txt");
+
+            // 4. create the source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertTrue(Files.exists(target), "Target file not created.");
+        }
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("Move: Check Source File Deleted - Unix")
+    void move_checkSourceFileDeleted_unix() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var2/source.txt");
+
+            // 4. create the source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertTrue(Files.notExists(source), "Source file not deleted.");
+        }
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("Move: Check Source File Deleted - Windows")
+    void move_checkSourceFileDeleted_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var2\\source.txt");
+
+            // 4. create source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertTrue(Files.notExists(source), "Source file not deleted.");
+        }
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("Move: Check Resolved On Success - Unix")
+    void move_checkResolvedOnSuccess_unix() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var2/source.txt");
+
+            // 4. create the source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.RESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("Move: Check Resolved On Success - Windows")
+    void move_checkResolvedOnSuccess_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var2\\source.txt");
+
+            // 4. create the source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.RESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("Move: Return unresolved on source path not exists - Unix")
+    void move_unresolvedOnSourcePathNotExists_unix() throws IOException
+    {
+        // create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var2/source.txt");
+
+            // 4. create source file
+            // Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.UNRESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("Move: Return unresolved on source path not exists - Windows")
+    void move_unresolvedOnSourcePathNotExists_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var2\\source.txt");
+
+            // 4. create source file
+            // Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.UNRESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("Move: Return unresolved on target directory not exists - Unix")
+    void move_unresolvedOnTargetDirNotExists_unix() throws IOException
+    {
+        // create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var3/source.txt");
+
+            // 4. create source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.UNRESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("Move: Return unresolved on target directory not exists - Windows")
+    void move_unresolvedOnTargetDirNotExists_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var3\\source.txt");
+
+            // 4. create source file
+            Files.writeString(source, source.toString());
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy();
+            final FileAction result = strategy.move(source, target);
+
+            assertEquals(FileAction.UNRESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+}

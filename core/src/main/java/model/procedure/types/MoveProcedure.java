@@ -21,7 +21,7 @@ public final class MoveProcedure extends Procedure
 {
     private Path sourcePath;
 
-    private Path targetPath;
+    private Path targetDirectory;
 
     private FileDiscoverStrategy discoverStrategy;
 

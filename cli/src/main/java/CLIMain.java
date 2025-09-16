@@ -1,6 +1,5 @@
 import control.procedure.dispatcher.ProcedureDispatcher;
 import listener.ConsoleListener;
-import model.file.discover.FlatDiscoverStrategy;
 import model.file.discover.RecursiveDiscoverStrategy;
 import model.file.move.FlatMoveStrategy;
 import model.file.PatternFilterStrategy;
@@ -36,7 +35,7 @@ public final class CLIMain
                 .name("Test")
                 .id("Test-1")
                 .sourcePath(Path.of("C:/Users/Lasse/Desktop/source/"))
-                .targetPath(Path.of("C:/Users/Lasse/Desktop/target/"))
+                .targetDirectory(Path.of("C:/Users/Lasse/Desktop/target/"))
                 .discoverStrategy(new RecursiveDiscoverStrategy())
                 .filterStrategy(new PatternFilterStrategy())
                 .fileMoveStrategy(new FlatMoveStrategy())
