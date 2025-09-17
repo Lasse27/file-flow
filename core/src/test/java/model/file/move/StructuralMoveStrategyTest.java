@@ -12,15 +12,13 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-final class FlatMoveStrategyTest
+class StructuralMoveStrategyTest
 {
-
     private static void createOneLayerTestingEnvironment(final FileSystem fileSystem, final String source, final String target) throws IOException
     {
         final Path sourceDir = fileSystem.getPath(source);
@@ -75,17 +73,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
                 final Path target = fileSystem.getPath("/var2/");
 
                 // 4. create the source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(Files.exists(result.targetFile()), "Target file not created.");
@@ -102,17 +104,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
                 final Path target = fileSystem.getPath("/var2/");
 
                 // 4. create the source file
-                Files.writeString(source, source.toAbsolutePath().toString(), StandardOpenOption.CREATE);
+                Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(Files.notExists(result.sourceFile()), "Source file not deleted.");
@@ -129,17 +135,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
                 final Path target = fileSystem.getPath("/var2/");
 
                 // 4. create the source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(result.resolved(), "Result not as expected.");
@@ -155,17 +165,22 @@ final class FlatMoveStrategyTest
             // create the file system
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                // 2. source dir
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
                 final Path target = fileSystem.getPath("/var2/");
 
                 // 4. create source file
                 // Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertFalse(result.resolved(), "Result not as expected.");
@@ -181,17 +196,22 @@ final class FlatMoveStrategyTest
             // create the file system
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                // 2. source dir
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
-                final Path target = fileSystem.getPath("/var3/");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
+                final Path target = fileSystem.getPath("/var4/");
 
-                // 4. create source file
+                // 4. create the source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertFalse(result.resolved(), "Result not as expected.");
@@ -207,10 +227,11 @@ final class FlatMoveStrategyTest
             // create the file system
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
             {
-                createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+                // 2. source dir
+                createOneLayerTestingEnvironment(fileSystem, "/var1/var3", "/var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("/var1/source.txt");
+                final Path source = fileSystem.getPath("/var1/var3/source.txt");
                 final Path target = fileSystem.getPath("/var2/");
 
                 // 4. create source file
@@ -218,7 +239,11 @@ final class FlatMoveStrategyTest
                 final BasicFileAttributes beforeBasic = Files.readAttributes(source, BasicFileAttributes.class);
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy(true);
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("/var1"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
                 final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
 
@@ -247,7 +272,7 @@ final class FlatMoveStrategyTest
 
                 // 3. define paths
                 final Path source = fileSystem.getPath("/var1/source.txt");
-                final Path target = fileSystem.getPath("/var2/");
+                final Path target = fileSystem.getPath("/var1/");
 
                 // 4. create the source file
                 Files.writeString(source, source.toString());
@@ -276,17 +301,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var2");
 
                 // 4. create the source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(Files.exists(target), "Target file not created.");
@@ -303,17 +332,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var2");
 
                 // 4. create source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(Files.notExists(source), "Source file not deleted.");
@@ -330,17 +363,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var2");
 
                 // 4. create the source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertTrue(result.resolved(), "Result not as expected.");
@@ -357,17 +394,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var2");
 
                 // 4. create source file
                 // Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertFalse(result.resolved(), "Result not as expected.");
@@ -384,17 +425,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var3\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var4");
 
                 // 4. create source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy();
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 assertFalse(result.resolved(), "Result not as expected.");
@@ -411,18 +456,22 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var2");
 
                 // 4. create source file
                 Files.writeString(source, source.toString());
                 final BasicFileAttributes beforeBasic = Files.readAttributes(source, BasicFileAttributes.class);
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy(true);
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
                 final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
 
@@ -448,17 +497,21 @@ final class FlatMoveStrategyTest
             try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
             {
                 // 2. source dir
-                createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+                createOneLayerTestingEnvironment(fileSystem, "C:\\var1\\var3", "C:\\var2");
 
                 // 3. define paths
-                final Path source = fileSystem.getPath("C:\\var1\\source.txt");
-                final Path target = fileSystem.getPath("C:\\var2\\");
+                final Path source = fileSystem.getPath("C:\\var1\\var3\\source.txt");
+                final Path target = fileSystem.getPath("C:\\var1");
 
                 // 4. create source file
                 Files.writeString(source, source.toString());
 
                 // 5. Move file
-                final FileMoveStrategy strategy = new FlatMoveStrategy(true);
+                final FileMoveStrategy strategy = StructuralMoveStrategy.builder()
+                        .sourceDirectory(fileSystem.getPath("C:\\var1\\"))
+                        .restoreAttributes(true)
+                        .build();
+
                 final FileAction result = strategy.move(source, target);
 
                 // Assert

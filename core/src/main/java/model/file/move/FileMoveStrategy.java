@@ -2,7 +2,11 @@ package model.file.move;
 
 import model.file.conflict.FileAction;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
 
 /**
  * Represents a strategy for moving a collection of files to a specified target directory.
@@ -11,6 +15,33 @@ import java.nio.file.Path;
 @FunctionalInterface
 public interface FileMoveStrategy
 {
+
+    static PosixFileAttributes readPosixFileAttributes(final Path sourcePath) throws IOException
+    {
+        PosixFileAttributes posixAttrs = null;
+        try
+        {
+            posixAttrs = Files.readAttributes(sourcePath, PosixFileAttributes.class);
+        }
+        catch (final UnsupportedOperationException ignored)
+        {
+            // Nicht-POSIX-Systeme ueberspringen
+        }
+        return posixAttrs;
+    }
+
+
+    static void restoreFileAttributes(final Path path, final BasicFileAttributes basicFileAttributes, final PosixFileAttributes posixFileAttributes) throws IOException
+    {
+        if (posixFileAttributes != null)
+        {
+            Files.setPosixFilePermissions(path, posixFileAttributes.permissions());
+            Files.setOwner(path, posixFileAttributes.owner());
+        }
+
+        Files.setLastModifiedTime(path, basicFileAttributes.lastModifiedTime());
+    }
+
     /**
      * Moves a file from the specified source path to the target path, optionally restoring file
      * attributes such as permissions, ownership, and modification time based on the implementation.
