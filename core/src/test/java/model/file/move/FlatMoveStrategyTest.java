@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,6 +35,35 @@ class FlatMoveStrategyTest
         final Path targetDir = fileSystem.getPath(target);
         Files.createDirectories(targetDir);
         assertTrue(Files.isDirectory(targetDir), "Target directory not created.");
+    }
+
+
+    private static boolean compareBasicFileAttributes(final BasicFileAttributes before, final BasicFileAttributes after)
+    {
+        if (before == after) return true;
+        if (before == null || after == null) return false;
+
+        final boolean creationTimeEqual = before.creationTime().equals(after.creationTime());
+        final boolean lastAccessTimeEqual = before.lastAccessTime().equals(after.lastAccessTime());
+        final boolean lastModifiedTimeEqual = before.lastModifiedTime().equals(after.lastModifiedTime());
+        final boolean sizeEqual = before.size() == after.size();
+        final boolean fileKeyEqual = before.fileKey().equals(after.fileKey());
+        final boolean isRegularFileEqual = before.isRegularFile() == after.isRegularFile();
+        final boolean isDirectoryEqual = before.isDirectory() == after.isDirectory();
+        final boolean isSymbolicLinkEqual = before.isSymbolicLink() == after.isSymbolicLink();
+        return creationTimeEqual && lastAccessTimeEqual && lastModifiedTimeEqual && sizeEqual && fileKeyEqual && isRegularFileEqual && isDirectoryEqual && isSymbolicLinkEqual;
+    }
+
+
+    private static boolean comparePosixFileAttributes(final PosixFileAttributes before, final PosixFileAttributes after)
+    {
+        if (before == after) return true;
+        if (before == null || after == null) return false;
+
+        final boolean groupEqual = before.group().equals(after.group());
+        final boolean ownerEqual = before.owner().equals(after.owner());
+        final boolean permissionsEqual = before.permissions().equals(after.permissions());
+        return groupEqual && ownerEqual && permissionsEqual;
     }
 
 
@@ -300,6 +331,79 @@ class FlatMoveStrategyTest
             final FileAction result = strategy.move(source, target);
 
             assertEquals(FileAction.UNRESOLVED(source, target), result, "Result not as expected.");
+        }
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("Move: Check if attributes restored if wanted - Unix")
+    void move_checkAttributesRestored_unix() throws IOException
+    {
+        // create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix()))
+        {
+            createOneLayerTestingEnvironment(fileSystem, "/var1", "/var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("/var1/source.txt");
+            final Path target = fileSystem.getPath("/var2/source.txt");
+
+            // 4. create source file
+            Files.writeString(source, source.toString());
+            final BasicFileAttributes beforeBasic = Files.readAttributes(source, BasicFileAttributes.class);
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy(true);
+            final FileAction result = strategy.move(source, target);
+            final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
+
+            // Assert
+            assertTrue(compareBasicFileAttributes(beforeBasic, afterBasic), "Basic file attributes not equal.");
+
+            if (fileSystem.supportedFileAttributeViews().contains("posix"))
+            {
+                final PosixFileAttributes afterPosix = Files.readAttributes(result.targetFile(), PosixFileAttributes.class);
+                final PosixFileAttributes beforePosix = Files.readAttributes(source, PosixFileAttributes.class);
+                assertTrue(comparePosixFileAttributes(beforePosix, afterPosix), "Posix file attributes not equal.");
+            }
+        }
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("Move: Check if attributes restored if wanted - Windows")
+    void move_checkAttributesRestored_win() throws IOException
+    {
+        // 1. create the file system
+        try (final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.windows()))
+        {
+            // 2. source dir
+            createOneLayerTestingEnvironment(fileSystem, "C:\\var1", "C:\\var2");
+
+            // 3. define paths
+            final Path source = fileSystem.getPath("C:\\var1\\source.txt");
+            final Path target = fileSystem.getPath("C:\\var2\\source.txt");
+
+            // 4. create source file
+            Files.writeString(source, source.toString());
+            final BasicFileAttributes beforeBasic = Files.readAttributes(source, BasicFileAttributes.class);
+
+            // 5. Move file
+            final FileMoveStrategy strategy = new FlatMoveStrategy(true);
+            final FileAction result = strategy.move(source, target);
+            final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
+
+            // Assert
+            assertTrue(compareBasicFileAttributes(beforeBasic, afterBasic), "Basic file attributes not equal.");
+
+            if (fileSystem.supportedFileAttributeViews().contains("posix"))
+            {
+                final PosixFileAttributes afterPosix = Files.readAttributes(result.targetFile(), PosixFileAttributes.class);
+                final PosixFileAttributes beforePosix = Files.readAttributes(source, PosixFileAttributes.class);
+                assertTrue(comparePosixFileAttributes(beforePosix, afterPosix), "Posix file attributes not equal.");
+            }
         }
     }
 }
