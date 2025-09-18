@@ -5,8 +5,6 @@ File-flow is a tool for defining procedures (workflows) that allow users to mana
 [![Java CI with Maven](https://github.com/Lasse27/file-flow/actions/workflows/maven.yml/badge.svg)](https://github.com/Lasse27/file-flow/actions/workflows/maven.yml)
 [![CodeQL Advanced](https://github.com/Lasse27/file-flow/actions/workflows/codeql.yml/badge.svg)](https://github.com/Lasse27/file-flow/actions/workflows/codeql.yml)
 
----
-
 ## Features
 
 - **Move** files between folders
@@ -17,14 +15,10 @@ File-flow is a tool for defining procedures (workflows) that allow users to mana
 - GUI using JavaFX
 - (Threaded / parallel processing planned, for better performance in the background)
 
----
-
 ## Disclaimer & Requirements
 
 - Use at your own risk. Some operations (especially with regex or delete) can be destructive.
 - Knowledge of regex may be required for filtering or matching files.
-
----
 
 ## Technology Stack
 
@@ -38,8 +32,6 @@ File-flow is a tool for defining procedures (workflows) that allow users to mana
 See [Jimfs](https://github.com/google/jimfs)
 - **Lombok** — for reducing boilerplate (getters, setters, logging, etc.)
 
----
-
 ## Current Status
 
 This is the present, working state of the project:
@@ -49,8 +41,6 @@ This is the present, working state of the project:
 - GUI (JavaFX) has not been started.
 - Commands are under progress; no CLI commands fully implemented yet.
 - No roadmap published yet beyond the current state.
-
----
 
 ## Building & Running
 
@@ -67,13 +57,9 @@ Usage via CLI is under development; once you build, you will find the CLI-artifa
 java -jar cli/target/file-flow.jar [options]
 ```
 
----
-
 ## License
 
 This project is licensed under the MIT License.
-
----
 
 ## Contribution
 
@@ -82,8 +68,6 @@ This project is licensed under the MIT License.
 - Open issues to report bugs or propose improvements.
 
 - Fork the repo and submit pull requests.
-
----
 
 ## Acknowledgments / Related Projects
 
