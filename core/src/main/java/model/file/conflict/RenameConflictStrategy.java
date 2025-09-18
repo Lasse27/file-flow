@@ -12,7 +12,7 @@ public class RenameConflictStrategy implements FileConflictStrategy
      * {@inheritDoc}
      */
     @Override
-    public FileAction resolve(final FileAction conflict)
+    public FileMove resolve(final FileMove conflict)
     {
         Path temp = conflict.targetFile();
         while (Files.exists(temp))
@@ -28,6 +28,6 @@ public class RenameConflictStrategy implements FileConflictStrategy
             );
             temp = temp.resolveSibling(newName);
         }
-        return FileAction.RESOLVED(conflict.sourceFile(), temp);
+        return FileMove.RESOLVED(conflict.sourceFile(), temp);
     }
 }

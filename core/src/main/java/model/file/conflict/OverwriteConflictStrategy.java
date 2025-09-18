@@ -12,7 +12,7 @@ public class OverwriteConflictStrategy implements FileConflictStrategy
      * {@inheritDoc}
      */
     @Override
-    public FileAction resolve(final FileAction conflict)
+    public FileMove resolve(final FileMove conflict)
     {
         return null;
     }

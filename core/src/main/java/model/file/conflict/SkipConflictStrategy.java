@@ -8,7 +8,7 @@ public class SkipConflictStrategy implements FileConflictStrategy
      * {@inheritDoc}
      */
     @Override
-    public @Nullable FileAction resolve(final FileAction conflict)
+    public @Nullable FileMove resolve(final FileMove conflict)
     {
         return null;
     }

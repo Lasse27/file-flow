@@ -10,10 +10,10 @@ public interface FileConflictStrategy
     /**
      * Resolves a file conflict using the implemented conflict resolution strategy.
      *
-     * @param conflict the file conflict to resolve, represented as a {@link FileAction} object. It
+     * @param conflict the file conflict to resolve, represented as a {@link FileMove} object. It
      *                 contains details about the source file, target file, and its resolution state.
-     * @return a {@link FileAction} object representing the result of the resolution. The returned
-     * object indicates whether the conflict was resolved, skipped, or remains unresolved.
+     * @return a {@link FileMove} object representing the result of the resolution. The returned
+     * object indicates whether the conflict was isResolved, skipped, or remains unresolved.
      */
-    FileAction resolve(FileAction conflict);
+    FileMove resolve(FileMove conflict);
 }

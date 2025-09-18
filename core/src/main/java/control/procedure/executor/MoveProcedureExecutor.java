@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.file.FileFilterStrategy;
-import model.file.conflict.FileAction;
+import model.file.conflict.FileMove;
 import model.file.conflict.FileConflictStrategy;
 import model.file.discover.FileDiscoverStrategy;
 import model.file.move.FileMoveStrategy;
@@ -62,12 +62,12 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
                         .build());
                 return;
             }
-            final List<FileAction> conflicts = this.move(filteredFiles, procedure);
+            final List<FileMove> conflicts = this.move(filteredFiles, procedure);
             if (conflicts.isEmpty())
             {
                 return;
             }
-            final List<FileAction> remainder = this.resolve(conflicts, procedure);
+            final List<FileMove> remainder = this.resolve(conflicts, procedure);
         }
         catch (final Exception exception)
         {
@@ -130,34 +130,34 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
     }
 
 
-    private List<FileAction> move(final List<Path> filteredFiles, final MoveProcedure procedure)
+    private List<FileMove> move(final List<Path> filteredFiles, final MoveProcedure procedure)
     {
         this.listeners.onStart(ListenerEvent.builder()
                 .message(String.format("Moving files for procedure: %s", procedure.getName()))
                 .build());
 
-        final List<FileAction> actions = new ArrayList<>();
+        final List<FileMove> actions = new ArrayList<>();
         final FileMoveStrategy strategy = procedure.getFileMoveStrategy();
         for (int i = 0; i < filteredFiles.size(); i++)
         {
             final int progress = (int) (((double) i / filteredFiles.size()) * 100);
 
             final Path sourcePath = filteredFiles.get(i);
-            final FileAction fileAction = strategy.move(sourcePath, procedure.getTargetDirectory());
-            if (fileAction.resolved())
+            final FileMove fileMove = strategy.move(sourcePath, procedure.getTargetDirectory());
+            if (fileMove.isResolved())
             {
                 this.listeners.onProgress(ProgressEvent.builder()
                         .progress(progress)
-                        .message(String.format("Moved %s -> %s", sourcePath, fileAction.targetFile()))
+                        .message(String.format("Moved %s -> %s", sourcePath, fileMove.targetFile()))
                         .build());
             }
             else
             {
                 this.listeners.onProgress(ProgressEvent.builder()
                         .progress(progress)
-                        .message(String.format("Conflict %s -> %s.", sourcePath, fileAction.targetFile()))
+                        .message(String.format("Conflict %s -> %s.", sourcePath, fileMove.targetFile()))
                         .build());
-                actions.add(fileAction);
+                actions.add(fileMove);
             }
         }
         this.listeners.onEnd(ListenerEvent.builder()
@@ -167,7 +167,7 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
     }
 
 
-    private List<FileAction> resolve(final List<FileAction> conflicts, final MoveProcedure procedure)
+    private List<FileMove> resolve(final List<FileMove> conflicts, final MoveProcedure procedure)
     {
         this.listeners.onStart(ListenerEvent.builder()
                 .message(String.format("Resolving conflicts for procedure: %s", procedure.getName()))
@@ -175,19 +175,19 @@ public class MoveProcedureExecutor implements ProcedureExecutor<MoveProcedure>
 
         final FileMoveStrategy strategy = procedure.getFileMoveStrategy();
         final FileConflictStrategy conflictStrategy = procedure.getFileConflictStrategy();
-        final List<FileAction> remainder = new ArrayList<>(conflicts.size());
+        final List<FileMove> remainder = new ArrayList<>(conflicts.size());
         final int all = conflicts.size();
         for (int i = 0; i < conflicts.size(); i++)
         {
             final int progress = (int) (((double) i / all) * 100);
-            final FileAction conflict = conflicts.get(i);
-            final FileAction postResolve = conflictStrategy.resolve(conflict);
+            final FileMove conflict = conflicts.get(i);
+            final FileMove postResolve = conflictStrategy.resolve(conflict);
             if (postResolve == null)
             {continue;}
-            if (postResolve.resolved())
+            if (postResolve.isResolved())
             {
-                final FileAction moved = strategy.move(postResolve.sourceFile(), postResolve.targetFile());
-                if (moved.resolved())
+                final FileMove moved = strategy.move(postResolve.sourceFile(), postResolve.targetFile());
+                if (moved.isResolved())
                 {
                     this.listeners.onProgress(ProgressEvent.builder()
                             .progress(progress)

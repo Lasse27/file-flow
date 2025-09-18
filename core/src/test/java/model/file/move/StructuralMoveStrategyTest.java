@@ -2,7 +2,7 @@ package model.file.move;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import model.file.conflict.FileAction;
+import model.file.conflict.FileMove;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -89,7 +89,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 assertTrue(Files.exists(result.targetFile()), "Target file not created.");
             }
@@ -120,7 +120,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 assertTrue(Files.notExists(result.sourceFile()), "Source file not deleted.");
             }
@@ -151,9 +151,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertTrue(result.resolved(), "Result not as expected.");
+                assertTrue(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -182,9 +182,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertFalse(result.resolved(), "Result not as expected.");
+                assertFalse(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -213,9 +213,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertFalse(result.resolved(), "Result not as expected.");
+                assertFalse(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -245,7 +245,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
                 final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
 
                 // Assert
@@ -263,7 +263,7 @@ class StructuralMoveStrategyTest
 
         @Test
         @Order(7)
-        @DisplayName("Move: Check move to the same file - should return resolved - Unix")
+        @DisplayName("Move: Check move to the same file - should return isResolved - Unix")
         void move_checkMoveToSameFileIsResolved_unix() throws IOException
         {
             // create the file system
@@ -281,10 +281,10 @@ class StructuralMoveStrategyTest
 
                 // 5. Move file
                 final FileMoveStrategy strategy = new FlatMoveStrategy(true);
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 // Assert
-                assertTrue(result.resolved(), "Result not as expected.");
+                assertTrue(result.isResolved(), "Result not as expected.");
             }
         }
     }
@@ -317,7 +317,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 assertTrue(Files.exists(target), "Target file not created.");
             }
@@ -348,7 +348,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 assertTrue(Files.notExists(source), "Source file not deleted.");
             }
@@ -379,9 +379,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertTrue(result.resolved(), "Result not as expected.");
+                assertTrue(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -410,9 +410,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertFalse(result.resolved(), "Result not as expected.");
+                assertFalse(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -441,9 +441,9 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
-                assertFalse(result.resolved(), "Result not as expected.");
+                assertFalse(result.isResolved(), "Result not as expected.");
             }
         }
 
@@ -473,7 +473,7 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
                 final BasicFileAttributes afterBasic = Files.readAttributes(result.targetFile(), BasicFileAttributes.class);
 
                 // Assert
@@ -491,7 +491,7 @@ class StructuralMoveStrategyTest
 
         @Test
         @Order(7)
-        @DisplayName("Move: Check move to the same file - should return resolved - Windows")
+        @DisplayName("Move: Check move to the same file - should return isResolved - Windows")
         void move_checkMoveToSameFileIsResolved_win() throws IOException
         {
             // 1. create the file system
@@ -513,10 +513,10 @@ class StructuralMoveStrategyTest
                         .restoreAttributes(true)
                         .build();
 
-                final FileAction result = strategy.move(source, target);
+                final FileMove result = strategy.move(source, target);
 
                 // Assert
-                assertTrue(result.resolved(), "Result not as expected.");
+                assertTrue(result.isResolved(), "Result not as expected.");
             }
         }
     }
