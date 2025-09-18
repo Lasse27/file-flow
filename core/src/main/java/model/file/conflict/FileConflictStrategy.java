@@ -13,7 +13,7 @@ public interface FileConflictStrategy
      * @param conflict the file conflict to resolve, represented as a {@link FileAction} object. It
      *                 contains details about the source file, target file, and its resolution state.
      * @return a {@link FileAction} object representing the result of the resolution. The returned
-     *         object indicates whether the conflict was resolved, skipped, or remains unresolved.
+     * object indicates whether the conflict was resolved, skipped, or remains unresolved.
      */
     FileAction resolve(FileAction conflict);
 }

@@ -3,9 +3,9 @@ package model.procedure.types;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import model.file.FileFilterStrategy;
 import model.file.conflict.FileConflictStrategy;
 import model.file.discover.FileDiscoverStrategy;
-import model.file.FileFilterStrategy;
 import model.file.move.FileMoveStrategy;
 import model.procedure.Procedure;
 
