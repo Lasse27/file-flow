@@ -1,6 +1,8 @@
 package control.procedure.executor;
 
+import model.listener.Listener;
 import model.procedure.Procedure;
+import model.shared.Registrable;
 
 /**
  * Represents a functional interface for executing procedures that extend the {@link Procedure} class.
@@ -8,8 +10,7 @@ import model.procedure.Procedure;
  *
  * @param <T> the type of {@link Procedure} to be executed. Must be a subclass of {@link Procedure}.
  */
-@FunctionalInterface
-public interface ProcedureExecutor<T extends Procedure>
+public interface ProcedureExecutor<T extends Procedure> extends Registrable<Listener>
 {
     /**
      * Executes the specified procedure.

@@ -45,6 +45,14 @@
                 <version>5.8.1</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- In-Memory-Filesystem while testing-->
+            <dependency>
+                <groupId>com.google.jimfs</groupId>
+                <artifactId>jimfs</artifactId>
+                <version>1.3.0</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

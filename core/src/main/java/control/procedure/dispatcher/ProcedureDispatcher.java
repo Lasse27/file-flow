@@ -26,10 +26,8 @@ import java.util.function.Supplier;
  */
 @ToString
 @NoArgsConstructor
-public class ProcedureDispatcher implements Registrable<Listener>
+public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Procedure, ProcedureHandler<? extends Procedure>>
 {
-
-    private final ListenerCollection listeners = ListenerCollection.builder().build();
 
     /**
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
@@ -44,6 +42,8 @@ public class ProcedureDispatcher implements Registrable<Listener>
 //            RenameProcedureHandler.class, RenameProcedureHandler::new
     );
 
+    private final ListenerCollection listeners = ListenerCollection.builder().build();
+
 
     /**
      * Dispatches a given {@link Procedure} to the appropriate handler for execution.
@@ -51,6 +51,7 @@ public class ProcedureDispatcher implements Registrable<Listener>
      * @param procedure the procedure to be dispatched. This object contains the type of procedure and its associated options. The procedure's type is used to determine the
      *                  appropriate handler for execution.
      */
+    @Override
     public void dispatch(final Procedure procedure)
     {
         // Execute handler
@@ -69,6 +70,7 @@ public class ProcedureDispatcher implements Registrable<Listener>
      * @return the corresponding {@link ProcedureHandler} for the specified procedure type.
      * @throws ProcedureDispatcherException if the procedure is null, its type is null, or the type does not have a corresponding handler.
      */
+    @Override
     public ProcedureHandler<? extends Procedure> getHandler(final Procedure procedure)
     {
         // Contracts
@@ -100,15 +102,15 @@ public class ProcedureDispatcher implements Registrable<Listener>
         try
         {
             this.listeners.onStart(ListenerEvent.builder()
-                    .taskId(procedure.getId())
                     .message(String.format("Executing procedure: %s", procedure.getName()))
                     .build());
 
             //noinspection unchecked
+            handler.register(this.listeners);
+            //noinspection unchecked
             handler.handle(procedure);
 
             this.listeners.onEnd(ListenerEvent.builder()
-                    .taskId(procedure.getId())
                     .message(String.format("Procedure %s execution finished.", procedure.getName()))
                     .build());
         }
@@ -122,6 +124,9 @@ public class ProcedureDispatcher implements Registrable<Listener>
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void register(final Listener listener)
     {
@@ -129,6 +134,9 @@ public class ProcedureDispatcher implements Registrable<Listener>
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void unregister(final Listener listener)
     {

@@ -1,6 +1,8 @@
 package control.procedure.validator;
 
+import model.listener.Listener;
 import model.procedure.Procedure;
+import model.shared.Registrable;
 
 /**
  * Functional interface for validating instances of {@link Procedure} or its derived types.
@@ -8,8 +10,7 @@ import model.procedure.Procedure;
  *
  * @param <T> the type of {@link Procedure} this validator will handle, must extend the {@link Procedure} class
  */
-@FunctionalInterface
-public interface ProcedureValidator<T extends Procedure>
+public interface ProcedureValidator<T extends Procedure> extends Registrable<Listener>
 {
     /**
      * Validates the specified procedure instance.

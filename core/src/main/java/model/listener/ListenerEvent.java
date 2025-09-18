@@ -1,6 +1,5 @@
 package model.listener;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -14,8 +13,6 @@ import java.time.Instant;
 @SuperBuilder
 public class ListenerEvent
 {
-    private final String taskId;
-
     private final String message;
 
     private final Instant timestamp = Instant.now();

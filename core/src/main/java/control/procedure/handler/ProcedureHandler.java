@@ -2,7 +2,9 @@ package control.procedure.handler;
 
 
 import exception.ProcedureHandlerException;
+import model.listener.Listener;
 import model.procedure.Procedure;
+import model.shared.Registrable;
 
 
 /**
@@ -10,11 +12,11 @@ import model.procedure.Procedure;
  * <br> <br>
  * Implementations of this interface are responsible for providing specific logic to process and validate procedures based on their type and provided attributes.
  *
+ * @param <T> type of procedure
  * @see Procedure
  * @see ProcedureHandlerException
  */
-@FunctionalInterface
-public interface ProcedureHandler<T extends Procedure>
+public interface ProcedureHandler<T extends Procedure> extends Registrable<Listener>
 {
     /**
      * Executes the handling of a procedure. The specific implementation details are determined by the classes implementing this method. This method serves as the entry point

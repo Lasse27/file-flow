@@ -1,12 +1,13 @@
-package model.file;
+package model.file.discover;
 
 import exception.FileDiscoverException;
+import model.listener.Listener;
+import model.listener.ProgressEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -22,15 +23,27 @@ public class FlatDiscoverStrategy implements FileDiscoverStrategy
      * {@inheritDoc}
      */
     @Override
-    public List<Path> discover(final Path sourcePath) throws FileDiscoverException
+    public List<Path> discover(final Path sourcePath, final Listener listener) throws FileDiscoverException
     {
         try (final Stream<Path> pathStream = Files.list(sourcePath))
         {
-            final Iterator<Path> pathIterator = pathStream.iterator();
+            final List<Path> allPaths = pathStream.toList(); // alle auf einmal laden
+            final int total = allPaths.size();
             final List<Path> discoveredFiles = new ArrayList<>();
-            while (pathIterator.hasNext())
+
+            long processed = 0;
+            long progress = 0;
+
+            for (final Path path : allPaths)
             {
-                final Path path = pathIterator.next();
+                processed++;
+                progress = Math.round((processed / (double) total) * 100);
+
+                listener.onProgress(ProgressEvent.builder()
+                        .progress(progress)
+                        .message(String.format("%s.", path))
+                        .build());
+
                 if (Files.isDirectory(path))
                 {
                     continue;
@@ -41,7 +54,10 @@ public class FlatDiscoverStrategy implements FileDiscoverStrategy
         }
         catch (final IOException exception)
         {
-            throw new FileDiscoverException("An error occurred while discovering files in the specified source path: " + sourcePath, exception);
+            throw new FileDiscoverException(
+                    "An error occurred while discovering files in the specified source path: " + sourcePath,
+                    exception
+            );
         }
     }
 }

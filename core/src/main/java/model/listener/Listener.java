@@ -1,7 +1,5 @@
 package model.listener;
 
-import com.sun.source.util.TaskEvent;
-
 /**
  * A listener interface for monitoring the lifecycle of a process or task.
  * <p>
