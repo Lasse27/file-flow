@@ -1,10 +1,14 @@
 import control.procedure.dispatcher.ProcedureDispatcher;
+import generator.FileGenerator;
 import listener.ConsoleListener;
 import model.file.PatternFilterStrategy;
 import model.file.conflict.RenameConflictStrategy;
+import model.file.delete.HardDeleteStrategy;
+import model.file.delete.SoftDeleteStrategy;
 import model.file.discover.RecursiveDiscoverStrategy;
 import model.file.move.StructuralMoveStrategy;
 import model.procedure.Procedure;
+import model.procedure.types.DeleteProcedure;
 import model.procedure.types.MoveProcedure;
 
 import java.nio.file.Path;
@@ -31,12 +35,12 @@ public final class CLIMain
      */
     public static void main(final String[] args)
     {
+
         final Path targetDirectory = Path.of("C:/Users/Lasse/Desktop/target/");
         final Path sourceDirectory = Path.of("C:/Users/Lasse/Desktop/source/");
-
-        final Procedure procedure = MoveProcedure.builder()
-                .name("Test")
-                .id("Test-1")
+        final Procedure moveProcedure = MoveProcedure.builder()
+                .name("Move Procedure Test")
+                .id("MPT-1")
                 .sourcePath(sourceDirectory)
                 .targetDirectory(targetDirectory)
                 .discoverStrategy(new RecursiveDiscoverStrategy())
@@ -48,8 +52,23 @@ public final class CLIMain
                 .fileConflictStrategy(new RenameConflictStrategy())
                 .build();
 
+        final Procedure deleteProcedure = DeleteProcedure.builder()
+                .name("Delete Procedure Test")
+                .id("DPT-1")
+                .sourcePath(sourceDirectory)
+                .discoverStrategy(new RecursiveDiscoverStrategy())
+                .filterStrategy(new PatternFilterStrategy())
+                .deleteStrategy(new SoftDeleteStrategy())
+                .build();
+
         final ProcedureDispatcher dispatcher = new ProcedureDispatcher();
         dispatcher.register(new ConsoleListener());
-        dispatcher.dispatch(procedure);
+
+        final FileGenerator generator = new FileGenerator();
+        generator.run();
+        dispatcher.dispatch(moveProcedure);
+
+//        generator.run();
+//        dispatcher.dispatch(deleteProcedure);
     }
 }

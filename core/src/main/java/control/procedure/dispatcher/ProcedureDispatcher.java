@@ -1,6 +1,7 @@
 package control.procedure.dispatcher;
 
 
+import control.procedure.handler.DeleteProcedureHandler;
 import control.procedure.handler.MoveProcedureHandler;
 import control.procedure.handler.ProcedureHandler;
 import exception.ProcedureDispatcherException;
@@ -12,6 +13,7 @@ import model.listener.ListenerCollection;
 import model.listener.ListenerEvent;
 import model.procedure.Procedure;
 import model.procedure.ProcedureType;
+import model.procedure.types.DeleteProcedure;
 import model.procedure.types.MoveProcedure;
 import model.shared.Registrable;
 import utility.Contracts;
@@ -33,10 +35,8 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
      * A static, immutable map that associates each {@link ProcedureType} with its corresponding {@link ProcedureHandler}.
      */
     private static final Map<Class<? extends Procedure>, Supplier<ProcedureHandler<? extends Procedure>>> handlers = Map.of(
-            MoveProcedure.class, MoveProcedureHandler::new
-//            CleanProcedureHandler.class, CleanProcedureHandler::new,
-//            CopyProcedureHandler.class, CopyProcedureHandler::new,
-//            DeleteProcedureHandler.class, DeleteProcedureHandler::new,
+            MoveProcedure.class, MoveProcedureHandler::new,
+            DeleteProcedure.class, DeleteProcedureHandler::new
 //            ZipProcedureHandler.class, ZipProcedureHandler::new,
 //            UnzipProcedureHandler.class, UnzipProcedureHandler::new,
 //            RenameProcedureHandler.class, RenameProcedureHandler::new

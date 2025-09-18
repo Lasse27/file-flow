@@ -2,7 +2,7 @@ package model.file.move;
 
 import lombok.Builder;
 import lombok.Data;
-import model.file.conflict.FileAction;
+import model.file.conflict.FileMove;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,12 +32,12 @@ public class StructuralMoveStrategy implements FileMoveStrategy
      * {@inheritDoc}
      */
     @Override
-    public FileAction move(final Path sourceFile, final Path targetDirectory)
+    public FileMove move(final Path sourceFile, final Path targetDirectory)
     {
         // Check if the target directory exists
         if (!Files.exists(targetDirectory))
         {
-            return FileAction.UNRESOLVED(sourceFile, null);
+            return FileMove.UNRESOLVED(sourceFile, null);
         }
 
         // Get the relative path to source directory
@@ -53,7 +53,7 @@ public class StructuralMoveStrategy implements FileMoveStrategy
             // Skip move if it's the same file
             if (sourceFile.toAbsolutePath().equals(targetPath.toAbsolutePath()))
             {
-                return FileAction.RESOLVED(sourceFile, targetPath);
+                return FileMove.RESOLVED(sourceFile, targetPath);
             }
 
             // move file
@@ -66,9 +66,9 @@ public class StructuralMoveStrategy implements FileMoveStrategy
         }
         catch (final IOException exception)
         {
-            return FileAction.UNRESOLVED(sourceFile, targetPath);
+            return FileMove.UNRESOLVED(sourceFile, targetPath);
         }
 
-        return FileAction.RESOLVED(sourceFile, targetPath);
+        return FileMove.RESOLVED(sourceFile, targetPath);
     }
 }
