@@ -1,9 +1,9 @@
 import control.procedure.dispatcher.ProcedureDispatcher;
 import listener.ConsoleListener;
-import model.file.discover.RecursiveDiscoverStrategy;
-import model.file.move.FlatMoveStrategy;
 import model.file.PatternFilterStrategy;
 import model.file.conflict.RenameConflictStrategy;
+import model.file.discover.RecursiveDiscoverStrategy;
+import model.file.move.StructuralMoveStrategy;
 import model.procedure.Procedure;
 import model.procedure.types.MoveProcedure;
 
@@ -31,14 +31,20 @@ public final class CLIMain
      */
     public static void main(final String[] args)
     {
+        final Path targetDirectory = Path.of("C:/Users/Lasse/Desktop/target/");
+        final Path sourceDirectory = Path.of("C:/Users/Lasse/Desktop/source/");
+
         final Procedure procedure = MoveProcedure.builder()
                 .name("Test")
                 .id("Test-1")
-                .sourcePath(Path.of("C:/Users/Lasse/Desktop/source/"))
-                .targetDirectory(Path.of("C:/Users/Lasse/Desktop/target/"))
+                .sourcePath(sourceDirectory)
+                .targetDirectory(targetDirectory)
                 .discoverStrategy(new RecursiveDiscoverStrategy())
                 .filterStrategy(new PatternFilterStrategy())
-                .fileMoveStrategy(new FlatMoveStrategy())
+                .fileMoveStrategy(StructuralMoveStrategy.builder()
+                        .restoreAttributes(true)
+                        .sourceDirectory(sourceDirectory)
+                        .build())
                 .fileConflictStrategy(new RenameConflictStrategy())
                 .build();
 
