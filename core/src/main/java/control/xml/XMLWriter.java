@@ -87,9 +87,6 @@ public class XMLWriter
     }
 
 
-
-
-
     /**
      * Writes the content of the given {@link Document} object to an XML file specified by the {@code xmlFile} field.
      *

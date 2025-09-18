@@ -1,6 +1,17 @@
-import control.xml.XMLWriter;
-import model.xml.XMLConfiguration;
-import model.xml.XMLConfigurationMeta;
+import control.procedure.dispatcher.ProcedureDispatcher;
+import generator.FileGenerator;
+import listener.ConsoleListener;
+import model.file.PatternFilterStrategy;
+import model.file.conflict.RenameConflictStrategy;
+import model.file.delete.HardDeleteStrategy;
+import model.file.delete.SoftDeleteStrategy;
+import model.file.discover.RecursiveDiscoverStrategy;
+import model.file.move.StructuralMoveStrategy;
+import model.procedure.Procedure;
+import model.procedure.types.DeleteProcedure;
+import model.procedure.types.MoveProcedure;
+
+import java.nio.file.Path;
 
 
 /**
@@ -9,25 +20,55 @@ import model.xml.XMLConfigurationMeta;
 public final class CLIMain
 {
 
-	/**
-	 * Private constructor to prevent instantiation of the CLIMain class. The CLIMain class is a utility class containing the main entry point and should not be instantiated.
-	 */
-	private CLIMain () {}
+    /**
+     * Private constructor to prevent instantiation of the CLIMain class. The CLIMain class is a utility class containing the main entry point and should not be instantiated.
+     */
+    private CLIMain()
+    {
+    }
 
 
+    /**
+     * The entry point of the application.
+     *
+     * @param args command-line arguments passed to the application.
+     */
+    public static void main(final String[] args)
+    {
 
-	/**
-	 * The entry point of the application.
-	 *
-	 * @param args command-line arguments passed to the application.
-	 */
-	public static void main (final String[] args)
-	{
-		final XMLConfigurationMeta metadata = new XMLConfigurationMeta("Lasse", "1.0.0", "Descr", "lasste", "10.01.1010");
-		final XMLConfiguration configuration = new XMLConfiguration.Builder()
-			                                       .withMeta(metadata)
-			                                       .build();
-		final XMLWriter writer = new XMLWriter("C:/Users/Lasse/Desktop/output.xml");
-		writer.write(configuration);
-	}
+        final Path targetDirectory = Path.of("C:/Users/Lasse/Desktop/target/");
+        final Path sourceDirectory = Path.of("C:/Users/Lasse/Desktop/source/");
+        final Procedure moveProcedure = MoveProcedure.builder()
+                .name("Move Procedure Test")
+                .id("MPT-1")
+                .sourcePath(sourceDirectory)
+                .targetDirectory(targetDirectory)
+                .discoverStrategy(new RecursiveDiscoverStrategy())
+                .filterStrategy(new PatternFilterStrategy())
+                .fileMoveStrategy(StructuralMoveStrategy.builder()
+                        .restoreAttributes(true)
+                        .sourceDirectory(sourceDirectory)
+                        .build())
+                .fileConflictStrategy(new RenameConflictStrategy())
+                .build();
+
+        final Procedure deleteProcedure = DeleteProcedure.builder()
+                .name("Delete Procedure Test")
+                .id("DPT-1")
+                .sourcePath(sourceDirectory)
+                .discoverStrategy(new RecursiveDiscoverStrategy())
+                .filterStrategy(new PatternFilterStrategy())
+                .deleteStrategy(new SoftDeleteStrategy())
+                .build();
+
+        final ProcedureDispatcher dispatcher = new ProcedureDispatcher();
+        dispatcher.register(new ConsoleListener());
+
+        final FileGenerator generator = new FileGenerator();
+        generator.run();
+        dispatcher.dispatch(moveProcedure);
+
+//        generator.run();
+//        dispatcher.dispatch(deleteProcedure);
+    }
 }
