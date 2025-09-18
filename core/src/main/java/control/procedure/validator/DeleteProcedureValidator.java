@@ -1,28 +1,24 @@
 package control.procedure.validator;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
-import model.procedure.types.MoveProcedure;
+import model.procedure.types.DeleteProcedure;
 
 /**
- * A specific implementation of the {@link ProcedureValidator} interface that validates the parameters required for executing a file move procedure.
+ * Implementation of the {@link ProcedureValidator} interface for validating {@link DeleteProcedure} instances.
+ * This class provides validation logic specifically for procedures related to deleting files, ensuring that
+ * the parameters provided in a {@code DeleteProcedure} are valid and complete.
+ *
+ * @see DeleteProcedure
+ * @see ProcedureValidator
+ * @see Listener
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
+public class DeleteProcedureValidator implements ProcedureValidator<DeleteProcedure>
 {
-
     /**
-     * A collection of {@link Listener} objects associated with the {@code MoveProcedureValidator}. This field manages
+     * A collection of {@link Listener} objects associated with the {@code DeleteProcedureValidator}. This field manages
      * the registration and notification of {@link Listener} objects for lifecycle events of the file-moving procedure.
      */
-    @Builder.Default
     private final ListenerCollection listeners = ListenerCollection.builder().build();
 
 
@@ -30,7 +26,7 @@ public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
      * {@inheritDoc}
      */
     @Override
-    public void validate(final MoveProcedure procedure)
+    public void validate(final DeleteProcedure procedure)
     {
     }
 

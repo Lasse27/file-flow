@@ -7,7 +7,6 @@ import control.procedure.validator.MoveProcedureValidator;
 import control.procedure.validator.ProcedureValidator;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
-import model.listener.ListenerEvent;
 import model.procedure.ProcedureType;
 import model.procedure.types.MoveProcedure;
 
@@ -17,7 +16,10 @@ import model.procedure.types.MoveProcedure;
  */
 public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedure>
 {
-
+    /**
+     * A collection of {@link Listener} objects associated with the {@code MoveProcedureHandler}. This field manages
+     * the registration and notification of {@link Listener} objects for lifecycle events of the file-moving procedure.
+     */
     private final ListenerCollection listeners = ListenerCollection.builder().build();
 
     /**
@@ -47,20 +49,10 @@ public final class MoveProcedureHandler implements ProcedureHandler<MoveProcedur
     @Override
     public void handle(final MoveProcedure procedure)
     {
-        this.listeners.onStart(
-                ListenerEvent.builder()
-                        .message(String.format("Handling move procedure: %s", procedure.getName()))
-                        .build());
-
         this.validator.register(this.listeners);
         this.validator.validate(procedure);
         this.executor.register(this.listeners);
         this.executor.execute(procedure);
-
-        this.listeners.onEnd(
-                ListenerEvent.builder()
-                        .message(String.format("Move procedure %s handled.", procedure.getName()))
-                        .build());
     }
 
 

@@ -36,7 +36,7 @@ public class ConsoleListener implements Listener
     public void onStart(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s %s - %s%s%n", GREEN, timestamp, event.getMessage(), RESET);
+        System.out.printf(">> %s%s\u001B[0m >> %s%n", GREEN, timestamp, event.getMessage());
     }
 
 
@@ -47,7 +47,7 @@ public class ConsoleListener implements Listener
     public void onProgress(final ProgressEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s %s - | %s - %s%s%n", BLUE, timestamp, event.getProgress(), event.getMessage(), RESET);
+        System.out.printf(">> %s%s\u001B[0m >> %s - %s\r", BLUE, timestamp, event.getProgress(), event.getMessage());
     }
 
 
@@ -58,7 +58,7 @@ public class ConsoleListener implements Listener
     public void onCancel(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s %s - %s%s%n", YELLOW, timestamp, event.getMessage(), RESET);
+        System.out.printf(">> %s%s\u001B[0m >> %s%n", YELLOW, timestamp, event.getMessage());
     }
 
 
@@ -69,6 +69,6 @@ public class ConsoleListener implements Listener
     public void onEnd(final ListenerEvent event)
     {
         final String timestamp = formatter.format(event.getTimestamp());
-        System.out.printf("%s %s - %s%s%n", GREEN, timestamp, event.getMessage(), RESET);
+        System.out.printf(">> %s%s\u001B[0m >> %s%n", GREEN, timestamp, event.getMessage());
     }
 }
