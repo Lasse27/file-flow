@@ -1,6 +1,7 @@
 package control.procedure.dispatcher;
 
 
+import control.procedure.handler.CleanProcedureHandler;
 import control.procedure.handler.DeleteProcedureHandler;
 import control.procedure.handler.MoveProcedureHandler;
 import control.procedure.handler.ProcedureHandler;
@@ -11,10 +12,7 @@ import lombok.ToString;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
 import model.listener.ListenerEvent;
-import model.procedure.Procedure;
-import model.procedure.ProcedureType;
-import model.procedure.DeleteProcedure;
-import model.procedure.MoveProcedure;
+import model.procedure.*;
 import shared.Registrable;
 import shared.Contracts;
 
@@ -36,7 +34,8 @@ public class ProcedureDispatcher implements Registrable<Listener>, Dispatcher<Pr
      */
     private static final Map<Class<? extends Procedure>, Supplier<ProcedureHandler<? extends Procedure>>> handlers = Map.of(
             MoveProcedure.class, MoveProcedureHandler::new,
-            DeleteProcedure.class, DeleteProcedureHandler::new
+            DeleteProcedure.class, DeleteProcedureHandler::new,
+            CleanProcedure.class, CleanProcedureHandler::new
 //            ZipProcedureHandler.class, ZipProcedureHandler::new,
 //            UnzipProcedureHandler.class, UnzipProcedureHandler::new,
 //            RenameProcedureHandler.class, RenameProcedureHandler::new
