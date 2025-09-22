@@ -1,4 +1,4 @@
-package model.file;
+package model.filter;
 
 import lombok.Data;
 

@@ -2,7 +2,7 @@ package control.procedure.executor;
 
 import model.listener.Listener;
 import model.procedure.Procedure;
-import model.shared.Registrable;
+import shared.Registrable;
 
 /**
  * Represents a functional interface for executing procedures that extend the {@link Procedure} class.

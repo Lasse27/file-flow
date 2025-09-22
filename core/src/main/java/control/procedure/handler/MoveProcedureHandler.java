@@ -8,7 +8,7 @@ import control.procedure.validator.ProcedureValidator;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
 import model.procedure.ProcedureType;
-import model.procedure.types.MoveProcedure;
+import model.procedure.MoveProcedure;
 
 
 /**

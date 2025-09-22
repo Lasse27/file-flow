@@ -1,4 +1,4 @@
-package model.file.conflict;
+package model.conflict;
 
 import org.jetbrains.annotations.Nullable;
 

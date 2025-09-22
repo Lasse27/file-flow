@@ -1,4 +1,4 @@
-package model.file.conflict;
+package model.conflict;
 
 /**
  * A functional interface for defining a strategy to resolve file conflicts that may occur when a source

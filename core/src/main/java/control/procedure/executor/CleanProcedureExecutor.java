@@ -1,28 +1,20 @@
-package control.procedure.validator;
+package control.procedure.executor;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
-import model.procedure.MoveProcedure;
+import model.procedure.CleanProcedure;
 
 /**
- * A specific implementation of the {@link ProcedureValidator} interface that validates the parameters required for executing a file move procedure.
+ * The CleanProcedureExecutor class is an implementation of the {@link ProcedureExecutor} interface
+ * specifically for handling {@link CleanProcedure} executions. It provides execution logic for cleaning
+ * procedures while supporting listener management for lifecycle events.
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
+public class CleanProcedureExecutor implements ProcedureExecutor<CleanProcedure>
 {
-
     /**
-     * A collection of {@link Listener} objects associated with the {@code MoveProcedureValidator}. This field manages
+     * A collection of {@link Listener} objects associated with the {@code CleanProcedureExecutor}. This field manages
      * the registration and notification of {@link Listener} objects for lifecycle events of the file-moving procedure.
      */
-    @Builder.Default
     private final ListenerCollection listeners = ListenerCollection.builder().build();
 
 
@@ -30,8 +22,9 @@ public class MoveProcedureValidator implements ProcedureValidator<MoveProcedure>
      * {@inheritDoc}
      */
     @Override
-    public void validate(final MoveProcedure procedure)
+    public void execute(final CleanProcedure procedure)
     {
+
     }
 
 

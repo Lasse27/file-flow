@@ -1,4 +1,4 @@
-package model.file;
+package model.filter;
 
 import java.nio.file.Path;
 

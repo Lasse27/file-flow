@@ -2,21 +2,21 @@ package control.procedure.validator;
 
 import model.listener.Listener;
 import model.listener.ListenerCollection;
-import model.procedure.DeleteProcedure;
+import model.procedure.CleanProcedure;
 
 /**
- * Implementation of the {@link ProcedureValidator} interface for validating {@link DeleteProcedure} instances.
- * This class provides validation logic specifically for procedures related to deleting files, ensuring that
- * the parameters provided in a {@code DeleteProcedure} are valid and complete.
+ * A specific implementation of the {@link ProcedureValidator} interface for validating instances of {@link CleanProcedure}.
+ * This class defines the necessary logic to validate parameters for clean procedures, ensuring that the
+ * provided configuration data is complete and accurate.
  *
- * @see DeleteProcedure
+ * @see CleanProcedure
  * @see ProcedureValidator
  * @see Listener
  */
-public class DeleteProcedureValidator implements ProcedureValidator<DeleteProcedure>
+public class CleanProcedureValidator implements ProcedureValidator<CleanProcedure>
 {
     /**
-     * A collection of {@link Listener} objects associated with the {@code DeleteProcedureValidator}. This field manages
+     * A collection of {@link Listener} objects associated with the {@code CleanProcedureValidator}. This field manages
      * the registration and notification of {@link Listener} objects for lifecycle events of the file-moving procedure.
      */
     private final ListenerCollection listeners = ListenerCollection.builder().build();
@@ -26,8 +26,9 @@ public class DeleteProcedureValidator implements ProcedureValidator<DeleteProced
      * {@inheritDoc}
      */
     @Override
-    public void validate(final DeleteProcedure procedure)
+    public void validate(final CleanProcedure procedure)
     {
+        // TODO: implement validation of clean procedure
     }
 
 

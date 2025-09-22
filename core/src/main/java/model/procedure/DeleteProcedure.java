@@ -1,12 +1,11 @@
-package model.procedure.types;
+package model.procedure;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
-import model.file.FileFilterStrategy;
-import model.file.delete.FileDeleteStrategy;
-import model.file.discover.FileDiscoverStrategy;
-import model.procedure.Procedure;
+import model.filter.FileFilterStrategy;
+import model.delete.FileDeleteStrategy;
+import model.discover.FileDiscoverStrategy;
 
 import java.nio.file.Path;
 

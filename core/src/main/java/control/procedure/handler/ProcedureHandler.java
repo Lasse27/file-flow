@@ -4,7 +4,7 @@ package control.procedure.handler;
 import exception.ProcedureHandlerException;
 import model.listener.Listener;
 import model.procedure.Procedure;
-import model.shared.Registrable;
+import shared.Registrable;
 
 
 /**

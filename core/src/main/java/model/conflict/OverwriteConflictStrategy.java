@@ -1,4 +1,4 @@
-package model.file.conflict;
+package model.conflict;
 
 /**
  * A conflict resolution strategy that resolves file conflicts by overwriting the target file

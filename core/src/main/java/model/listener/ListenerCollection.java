@@ -2,7 +2,7 @@ package model.listener;
 
 import lombok.Builder;
 import lombok.Data;
-import model.shared.Registrable;
+import shared.Registrable;
 
 import java.util.Arrays;
 

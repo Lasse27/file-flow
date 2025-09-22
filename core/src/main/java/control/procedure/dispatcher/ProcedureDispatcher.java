@@ -13,10 +13,10 @@ import model.listener.ListenerCollection;
 import model.listener.ListenerEvent;
 import model.procedure.Procedure;
 import model.procedure.ProcedureType;
-import model.procedure.types.DeleteProcedure;
-import model.procedure.types.MoveProcedure;
-import model.shared.Registrable;
-import utility.Contracts;
+import model.procedure.DeleteProcedure;
+import model.procedure.MoveProcedure;
+import shared.Registrable;
+import shared.Contracts;
 
 import java.util.Map;
 import java.util.Optional;

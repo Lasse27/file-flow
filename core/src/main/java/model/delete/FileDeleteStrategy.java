@@ -1,6 +1,6 @@
-package model.file.delete;
+package model.delete;
 
-import model.file.conflict.FileMove;
+import model.conflict.FileMove;
 import model.listener.Listener;
 
 import java.nio.file.Path;

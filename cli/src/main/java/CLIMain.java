@@ -1,15 +1,14 @@
 import control.procedure.dispatcher.ProcedureDispatcher;
 import generator.FileGenerator;
 import listener.ConsoleListener;
-import model.file.PatternFilterStrategy;
-import model.file.conflict.RenameConflictStrategy;
-import model.file.delete.HardDeleteStrategy;
-import model.file.delete.SoftDeleteStrategy;
-import model.file.discover.RecursiveDiscoverStrategy;
-import model.file.move.StructuralMoveStrategy;
+import model.filter.PatternFilterStrategy;
+import model.conflict.RenameConflictStrategy;
+import model.delete.SoftDeleteStrategy;
+import model.discover.RecursiveDiscoverStrategy;
+import model.move.StructuralMoveStrategy;
 import model.procedure.Procedure;
-import model.procedure.types.DeleteProcedure;
-import model.procedure.types.MoveProcedure;
+import model.procedure.DeleteProcedure;
+import model.procedure.MoveProcedure;
 
 import java.nio.file.Path;
 

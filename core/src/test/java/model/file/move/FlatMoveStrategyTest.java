@@ -2,7 +2,9 @@ package model.file.move;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import model.file.conflict.FileMove;
+import model.conflict.FileMove;
+import model.move.FileMoveStrategy;
+import model.move.FlatMoveStrategy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;

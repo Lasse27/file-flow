@@ -1,4 +1,4 @@
-package model.file.discover;
+package model.discover;
 
 import exception.FileDiscoverException;
 import model.listener.Listener;
@@ -11,7 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class RecursiveDiscoverStrategy implements FileDiscoverStrategy
+/**
+ * A file discovery strategy that retrieves all files located directly within a given directory.
+ * <br>
+ * Implements {@link FileDiscoverStrategy}, providing a concrete realization of file discovery
+ * for flat directory structures.
+ */
+public class FlatDiscoverStrategy implements FileDiscoverStrategy
 {
     /**
      * {@inheritDoc}
@@ -19,26 +25,26 @@ public class RecursiveDiscoverStrategy implements FileDiscoverStrategy
     @Override
     public List<Path> discover(final Path sourcePath, final Listener listener) throws FileDiscoverException
     {
-        try (final Stream<Path> pathStream = Files.walk(sourcePath))
+        try (final Stream<Path> pathStream = Files.list(sourcePath))
         {
-            final List<Path> paths = pathStream.toList();
-            final long total = paths.size();
+            final List<Path> allPaths = pathStream.toList(); // alle auf einmal laden
+            final int total = allPaths.size();
+            final List<Path> discoveredFiles = new ArrayList<>();
+
             long processed = 0;
             long progress = 0;
-            final List<Path> discoveredFiles = new ArrayList<>();
-            for (final Path path : paths)
+
+            for (final Path path : allPaths)
             {
                 processed++;
                 progress = Math.round((processed / (double) total) * 100);
+
                 listener.onProgress(ProgressEvent.builder()
                         .progress(progress)
                         .message(String.format("%s.", path))
                         .build());
+
                 if (Files.isDirectory(path))
-                {
-                    continue;
-                }
-                if (Files.isSymbolicLink(path))
                 {
                     continue;
                 }

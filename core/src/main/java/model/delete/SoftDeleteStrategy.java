@@ -1,4 +1,4 @@
-package model.file.delete;
+package model.delete;
 
 import model.listener.Listener;
 

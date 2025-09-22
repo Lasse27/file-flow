@@ -2,7 +2,7 @@ package control.procedure.validator;
 
 import model.listener.Listener;
 import model.procedure.Procedure;
-import model.shared.Registrable;
+import shared.Registrable;
 
 /**
  * Functional interface for validating instances of {@link Procedure} or its derived types.

@@ -1,10 +1,10 @@
-package model.file.move;
+package model.move;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.file.conflict.FileMove;
+import model.conflict.FileMove;
 
 import java.io.IOException;
 import java.nio.file.Files;

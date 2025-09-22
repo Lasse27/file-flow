@@ -7,7 +7,7 @@ import control.procedure.validator.ProcedureValidator;
 import exception.ProcedureHandlerException;
 import model.listener.Listener;
 import model.listener.ListenerCollection;
-import model.procedure.types.DeleteProcedure;
+import model.procedure.DeleteProcedure;
 
 /**
  * Handles the execution of {@link DeleteProcedure} instances, including their validation and execution processes.

@@ -1,8 +1,8 @@
-package model.file.move;
+package model.move;
 
 import lombok.Builder;
 import lombok.Data;
-import model.file.conflict.FileMove;
+import model.conflict.FileMove;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package model.shared;
+package shared;
 
 /**
  * Represents a generic interface for managing the registration and unregistration of objects of type T.
